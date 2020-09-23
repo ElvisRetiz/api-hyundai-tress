@@ -10,7 +10,12 @@
   "author": "Elvis Retiz",
   "license": "MIT",
   "dependencies": {
+    "base64-arraybuffer": "^0.2.0",
+    "base64topdf": "^1.1.8",
     "express": "^4.17.1",
+    "html-pdf": "^2.2.0",
+    "node-blob": "0.0.2",
+    "numero-a-letras": "^1.0.6",
     "sequelize": "^6.3.5",
     "tedious": "^9.2.1"
   },
