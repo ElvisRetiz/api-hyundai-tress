@@ -1,9 +1,9 @@
 const config = {
   companyCode: "HTSPT",
-  department: "CB_NIVEL1",
-  area: "CB_NIVEL2",
-  subarea: "CB_NIVEL3",
-  employeeType: "CB_NIVEL4"
+  department: "NIVEL1",
+  area: "NIVEL2",
+  subarea: "NIVEL3",
+  employeeType: "NIVEL4"
 };
 
 module.exports = config;
