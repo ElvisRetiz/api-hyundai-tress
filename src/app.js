@@ -17,7 +17,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 const employeeRoute = require("./routes/employee.route");
+const authRoute = require('./routes/auth.route');
 
 app.use("/api/employee", employeeRoute);
+app.use("/api/auth", authRoute);
 
 module.exports = app;

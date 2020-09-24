@@ -9,12 +9,13 @@ const config = require('../config');
 const controller = {
   signupEmployee: async (req, res) => {
     try {
+      
+      const { birthday, nss, rfc, curp } = req.params;
+      const employeeNumber = req.params.employee;
 
-      let employeeIndex = 1
-
-      const employees = await Employee.findAll({
+      const employee = await Employee.findOne({
         where: {
-          CB_ACTIVO: 'S'
+          CB_CODIGO: employeeNumber
         },
         attributes:[
           ['CB_CODIGO', 'number'],
@@ -26,32 +27,57 @@ const controller = {
         ]
       });
 
-      for (const employee of employees) {
-        let department = await Department.findOne({
-          attributes: [
-            'TB_ELEMENT'
-          ],
-          where: {
-            TB_CODIGO: employee.getDataValue('department')
-          }
-        })
-        employee.setDataValue('department', department.dataValues.TB_ELEMENT);
+      if(employee === null) return res.send({
+        found: "N",
+        result: "E",
+        message: "No employee was found with the information provided."
+      });
 
-        let area = await Area.findOne({
-          attributes: [
-            'TB_ELEMENT'
-          ],
-          where: {
-            TB_CODIGO: employee.getDataValue('area')
-          }
-        })
-        employee.setDataValue('area', area.dataValues.TB_ELEMENT);
+      let department = await Department.findOne({
+        attributes: [
+          'TB_ELEMENT'
+        ],
+        where: {
+          TB_CODIGO: employee.getDataValue('department')
+        }
+      });
+      employee.setDataValue('department', department.dataValues.TB_ELEMENT);
 
-        employee.setDataValue('index', employeeIndex)
-        employeeIndex++
-      }
+      let area = await Area.findOne({
+        attributes: [
+          'TB_ELEMENT'
+        ],
+        where: {
+          TB_CODIGO: employee.getDataValue('area')
+        }
+      });
+      employee.setDataValue('area', area.dataValues.TB_ELEMENT);
 
-      return res.send(employees);
+      let subarea = await Subarea.findOne({
+        attributes: [
+          'TB_ELEMENT'
+        ],
+        where: {
+          TB_CODIGO: employee.getDataValue('subarea')
+        }
+      });
+      employee.setDataValue('subarea', subarea.dataValues.TB_ELEMENT);
+
+      let type = await Type.findOne({
+        attributes: [
+          'TB_ELEMENT'
+        ],
+        where: {
+          TB_CODIGO: employee.getDataValue('type')
+        }
+      });
+      employee.setDataValue('type', type.dataValues.TB_ELEMENT);
+
+      employee.setDataValue('found', "Y");
+      employee.setDataValue('result', "S");
+      employee.setDataValue('message', "Succes");
+
+      return res.send(employee);
 
     } catch (error) {
 
@@ -62,6 +88,18 @@ const controller = {
       })
       
     }
+  },
+  testFunction: async (req, res) => {
+    const { employee, birthday, nss, rfc } = req.params;
+    console.log({
+      employee,
+      birthday,
+      nss,
+      rfc
+    });
+    return res.send({
+      message: "calis"
+    })
   }
 };
 
