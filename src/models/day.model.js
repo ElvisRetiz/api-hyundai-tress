@@ -1,6 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../db/index');
-const Record = require('./record.model');
 
 class Day extends Model {}
 
