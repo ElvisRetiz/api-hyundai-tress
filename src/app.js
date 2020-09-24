@@ -18,8 +18,10 @@ app.use(express.json());
 
 const employeeRoute = require("./routes/employee.route");
 const authRoute = require('./routes/auth.route');
+const attendanceRoute = require('./routes/attendance.route');
 
 app.use("/api/employee", employeeRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/attendance", attendanceRoute);
 
 module.exports = app;
