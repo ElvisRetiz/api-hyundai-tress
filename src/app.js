@@ -19,9 +19,11 @@ app.use(express.json());
 const employeeRoute = require("./routes/employee.route");
 const authRoute = require('./routes/auth.route');
 const attendanceRoute = require('./routes/attendance.route');
+const payrollRoute = require('./routes/payroll.route');
 
 app.use("/api/employee", employeeRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/attendance", attendanceRoute);
+app.use("/api/payroll", payrollRoute);
 
 module.exports = app;

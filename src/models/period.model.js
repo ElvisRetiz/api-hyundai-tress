@@ -18,22 +18,18 @@ Period.init({
   },
   PE_FEC_PAG: {
     type: DataTypes.DATEONLY,
-    allowNull: false
+    allowNull: false,
+    primaryKey: true
   },
   PE_MES: {
     type: DataTypes.SMALLINT,
     allowNull: false
-  },
-  CB_CODIGO: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true
   }
 },{
   sequelize,
   modelName: 'Period',
-  tableName: 'NOMINA',
+  tableName: 'PERIODO',
   timestamps: false
 });
 
-module.exports = Payroll;
+module.exports = Period;
