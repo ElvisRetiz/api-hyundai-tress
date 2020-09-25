@@ -20,10 +20,12 @@ const employeeRoute = require("./routes/employee.route");
 const authRoute = require('./routes/auth.route');
 const attendanceRoute = require('./routes/attendance.route');
 const payrollRoute = require('./routes/payroll.route');
+const payslipRoute = require('./routes/payslip.route');
 
 app.use("/api/employee", employeeRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/attendance", attendanceRoute);
 app.use("/api/payroll", payrollRoute);
+app.use("/api/payslip", payslipRoute);
 
 module.exports = app;

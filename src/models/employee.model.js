@@ -45,10 +45,6 @@ Employee.init({
     type: DataTypes.DATEONLY,
     allowNull: false
   },
-  CB_NIVEL4: {
-    type: DataTypes.CHAR,
-    allowNull: false
-  },
   CB_SEGSOC: {
     type: DataTypes.CHAR,
     allowNull: false
