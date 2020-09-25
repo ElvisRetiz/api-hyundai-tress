@@ -32,6 +32,38 @@ Employee.init({
   CB_NIVEL4: {
     type: DataTypes.CHAR,
     allowNull: false
+  },
+  CB_PATRON: {
+    type: DataTypes.CHAR,
+    allowNull: false
+  },
+  CB_FEC_ANT: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  CB_FEC_ING: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  CB_NIVEL4: {
+    type: DataTypes.CHAR,
+    allowNull: false
+  },
+  CB_SEGSOC: {
+    type: DataTypes.CHAR,
+    allowNull: false
+  },
+  CB_RFC: {
+    type: DataTypes.CHAR,
+    allowNull: false
+  },
+  CB_CURP: {
+    type: DataTypes.CHAR,
+    allowNull: false
+  },
+  CB_INFCRED: {
+    type: DataTypes.CHAR,
+    allowNull: false
   }
 },{
   sequelize,

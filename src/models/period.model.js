@@ -21,6 +21,15 @@ Period.init({
     allowNull: false,
     primaryKey: true
   },
+  PE_FEC_INI: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  PE_FEC_FIN: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    primaryKey: true
+  },
   PE_MES: {
     type: DataTypes.SMALLINT,
     allowNull: false

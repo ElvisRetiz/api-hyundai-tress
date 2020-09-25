@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../db/index');
+const { costCenter } = require('../config');
 
 class Payroll extends Model {}
 
@@ -30,6 +31,18 @@ Payroll.init({
   },
   PE_TIPO: {
     type: DataTypes.SMALLINT,
+    allowNull: false
+  },
+  CB_SALARIO: {
+    type: DataTypes.NUMBER,
+    allowNull: false
+  },
+  CB_SAL_INT: {
+    type: DataTypes.NUMBER,
+    allowNull: false
+  },
+  [`CB_${costCenter}`]: {
+    type: DataTypes.CHAR,
     allowNull: false
   },
   CB_CODIGO: {
