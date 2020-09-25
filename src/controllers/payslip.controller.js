@@ -1,7 +1,9 @@
 const dayjs = require('dayjs');
 const Sequelize = require('sequelize');
+const convertir = require('numero-a-letras')
 
 const config = require('../config');
+const dateHandler = require('../helpers/dateHandler');
 
 const Period = require('../models/period.model');
 const Payroll = require('../models/payroll.model');
@@ -90,7 +92,30 @@ const controller = {
           CB_CODIGO: parseInt(employeeNumber, 10),
           $and: Sequelize.literal("CO_NUMERO in (select CO_NUMERO from CONCEPTO where CO_IMPRIME = 'S')")
         }
-      })
+      });
+
+      let payrollInfo = {};
+      payrollInfo.perceptions = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('NO_PERCEPC')).slice(2);
+      payrollInfo.deductions = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('NO_DEDUCCI')).slice(2);
+      payrollInfo.total = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('NO_NETO')).slice(2);
+      payrollInfo.totalInText = convertir.NumerosALetras(payroll.getDataValue('NO_NETO'));
+      payrollInfo.dailySalary = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('CB_SALARIO')).slice(2);
+      payrollInfo.integratedSalary = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('CB_SAL_INT')).slice(2);
+      payrollInfo.initialDate = dayjs(dateHandler.addDay(period.getDataValue('PE_FEC_INI'))).format('DD/MM/YYYY');
+      payrollInfo.finalDate = dayjs(dateHandler.addDay(period.getDataValue('PE_FEC_FIN'))).format('DD/MM/YYYY');
+      payrollInfo.payDate = dayjs(dateHandler.addDay(period.getDataValue('PE_FEC_PAG'))).format('DD/MM/YYYY');
+      payrollInfo.employeeName = employee.getDataValue('PRETTYNAME');
+      payrollInfo.seniorityDate = dayjs(dateHandler.addDay(employee.getDataValue('CB_FEC_ANT'))).format('DD/MM/YYYY');
+      payrollInfo.admissionDate = dayjs(dateHandler.addDay(employee.getDataValue('CB_FEC_ING'))).format('DD/MM/YYYY');
+      payrollInfo.nss = employee.getDataValue('CB_SEGSOC');
+      payrollInfo.rfc = employee.getDataValue('CB_RFC');
+      payrollInfo.curp = employee.getDataValue('CB_CURP');
+      payrollInfo.creditNumber = employee.getDataValue('CB_INFCRED');
+      payrollInfo.numReg = businessName.getDataValue('TB_NUMREG');
+      payrollInfo.companyName = company.getDataValue('RS_NOMBRE');
+      payrollInfo.companyAddress = `${company.getDataValue('RS_CALLE')}, ${company.getDataValue('RS_NUMEXT')}, ${company.getDataValue('RS_COLONIA')}, ${company.getDataValue('RS_CIUDAD')}`;
+      payrollInfo.companyRfc = company.getDataValue('RS_RFC');
+      payrollInfo.costCenter = costCenter.getDataValue('TB_ELEMENT');
 
       return res.send({
         payroll,
@@ -100,7 +125,8 @@ const controller = {
         company,
         costCenter,
         concepts,
-        movements
+        movements,
+        payrollInfo
       });
 
     } catch (error) {
