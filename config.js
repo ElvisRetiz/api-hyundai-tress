@@ -5,7 +5,7 @@ const config = {
   subarea: "NIVEL3",
   employeeType: "NIVEL4",
   costCenter: "NIVEL5",
-  typeOfConcept: "1,2"
+  includeBenefits: false
 };
 
 module.exports = config;

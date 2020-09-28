@@ -2,7 +2,7 @@ const dayjs = require('dayjs');
 
 const Employee = require('../models/employee.model');
 
-const config = require('../config');
+const config = require('../../config');
 
 const controller = {
   getAllEmployees: async (req, res) => {

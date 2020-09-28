@@ -4,7 +4,7 @@ const Area = require('../models/area.model');
 const Subarea = require('../models/subarea.model');
 const Type = require('../models/type.model');
 
-const config = require('../config');
+const config = require('../../config');
 
 const controller = {
   signupEmployee: async (req, res) => {

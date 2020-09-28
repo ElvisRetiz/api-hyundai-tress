@@ -2,9 +2,9 @@ const dayjs = require('dayjs');
 const Sequelize = require('sequelize');
 const path = require('path');
 const fs = require('fs');
-const convertir = require('numero-a-letras')
+const convertir = require('numero-a-letras');
 
-const config = require('../config');
+const config = require('../../config');
 
 const PortableDocumentFormat = require('../helpers/PortableDocumentFormat');
 const { pdfGenerator } = require('../helpers/promiseHandler')
@@ -19,7 +19,6 @@ const Company = require('../models/company.model');
 const CostCenter = require('../models/cost-center.model');
 const Concept = require('../models/concepts.model');
 const Movement = require('../models/movement.model');
-const { log } = require('console');
 
 const controller = {
   getPayslip: async (req, res) => {
@@ -27,6 +26,7 @@ const controller = {
 
       const { day, month, year, paydate } = req.params;
       const employeeNumber = req.params.employee;
+      const conceptsNumber = config.includeBenefits ? '1,2,3,4' : '1,2';
       let date;
       
       if(paydate) {
@@ -97,7 +97,7 @@ const controller = {
           PE_NUMERO: period.getDataValue('PE_NUMERO'),
           PE_TIPO: period.getDataValue('PE_TIPO'),
           CB_CODIGO: parseInt(employeeNumber, 10),
-          $and: Sequelize.literal(`CO_NUMERO in (select CO_NUMERO from CONCEPTO where CO_IMPRIME = 'S' and CO_TIPO in (${config.typeOfConcept}))`)
+          $and: Sequelize.literal(`CO_NUMERO in (select CO_NUMERO from CONCEPTO where CO_IMPRIME = 'S' and CO_TIPO in (${conceptsNumber}))`)
         }
       });
 
@@ -140,11 +140,11 @@ const controller = {
       let detail = new PortableDocumentFormat(payrollInfo,payrollMovements);
       let detailHTML  = detail.getContent();
 
-      const pdf = await pdfGenerator(detailHTML, path.join(__dirname,'../','assets/',`${config.companyCode}-${employeeNumber}-${date}.pdf`));
+      const pdf = await pdfGenerator(detailHTML, path.join(__dirname, "../../","assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`));
 
-      fs.unlink(path.join(__dirname,'../','assets/',`${config.companyCode}-${employeeNumber}-${date}.pdf`), err => {
+      fs.unlink(path.join(__dirname, "../../","assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), err => {
         if (err) throw err;
-        console.log(path.join(__dirname,'../','assets/',`${config.companyCode}-${employeeNumber}-${date}.pdf`), ' was deleted');
+        console.log(path.join(__dirname, "../../","assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), ' was deleted');
       });
 
       return res.send({

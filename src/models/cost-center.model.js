@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../db/index');
 
-const config = require('../config');
+const config = require('../../config');
 
 class CostCenter extends Model {}
 
