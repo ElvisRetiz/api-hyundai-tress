@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "build": "nexe src/index.js -r ./src/**/*"
   },
   "author": "Elvis Retiz",
   "license": "MIT",
@@ -22,6 +23,7 @@
     "tedious": "^9.2.1"
   },
   "devDependencies": {
+    "nexe": "^3.3.7",
     "nodemon": "^2.0.4"
   }
 }
