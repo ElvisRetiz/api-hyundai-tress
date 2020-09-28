@@ -1,9 +1,13 @@
 const dayjs = require('dayjs');
 const Sequelize = require('sequelize');
+const path = require('path');
+const fs = require('fs');
 const convertir = require('numero-a-letras')
 
-const PortableDocumentFormat = require('../helpers/PortableDocumentFormat');
 const config = require('../config');
+
+const PortableDocumentFormat = require('../helpers/PortableDocumentFormat');
+const { pdfGenerator } = require('../helpers/promiseHandler')
 const { addDay } = require('../helpers/dateHandler');
 const { format } = require('../helpers/amountsHandler');
 
@@ -15,6 +19,7 @@ const Company = require('../models/company.model');
 const CostCenter = require('../models/cost-center.model');
 const Concept = require('../models/concepts.model');
 const Movement = require('../models/movement.model');
+const { log } = require('console');
 
 const controller = {
   getPayslip: async (req, res) => {
@@ -135,7 +140,16 @@ const controller = {
       let detail = new PortableDocumentFormat(payrollInfo,payrollMovements);
       let detailHTML  = detail.getContent();
 
-      return res.send(detailHTML);
+      const pdf = await pdfGenerator(detailHTML, path.join(__dirname,'../','assets/',`${config.companyCode}-${employeeNumber}-${date}.pdf`));
+
+      fs.unlink(path.join(__dirname,'../','assets/',`${config.companyCode}-${employeeNumber}-${date}.pdf`), err => {
+        if (err) throw err;
+        console.log(path.join(__dirname,'../','assets/',`${config.companyCode}-${employeeNumber}-${date}.pdf`), ' was deleted');
+      });
+
+      return res.send({
+        payslipbinfile: pdf
+      });
 
     } catch (error) {
 
