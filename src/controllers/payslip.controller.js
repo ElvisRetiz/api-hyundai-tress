@@ -2,6 +2,7 @@ const dayjs = require('dayjs');
 const Sequelize = require('sequelize');
 const convertir = require('numero-a-letras')
 
+const PortableDocumentFormat = require('../helpers/PortableDocumentFormat');
 const config = require('../config');
 const { addDay } = require('../helpers/dateHandler');
 const { format } = require('../helpers/amountsHandler');
@@ -105,7 +106,9 @@ const controller = {
       payrollInfo.initialDate = dayjs(addDay(period.getDataValue('PE_FEC_INI'))).format('DD/MM/YYYY');
       payrollInfo.finalDate = dayjs(addDay(period.getDataValue('PE_FEC_FIN'))).format('DD/MM/YYYY');
       payrollInfo.payDate = dayjs(addDay(period.getDataValue('PE_FEC_PAG'))).format('DD/MM/YYYY');
+      payrollInfo.periodNumber = payroll.getDataValue('PE_NUMERO');
       payrollInfo.employeeName = employee.getDataValue('PRETTYNAME');
+      payrollInfo.employeeNumber = employeeNumber;
       payrollInfo.seniorityDate = dayjs(addDay(employee.getDataValue('CB_FEC_ANT'))).format('DD/MM/YYYY');
       payrollInfo.admissionDate = dayjs(addDay(employee.getDataValue('CB_FEC_ING'))).format('DD/MM/YYYY');
       payrollInfo.nss = employee.getDataValue('CB_SEGSOC');
@@ -129,18 +132,10 @@ const controller = {
         payrollMovements.push(conceptObject);
       }
 
-      return res.send({
-        payroll,
-        period,
-        employee,
-        businessName,
-        company,
-        costCenter,
-        concepts,
-        movements,
-        payrollInfo,
-        payrollMovements
-      });
+      let detail = new PortableDocumentFormat(payrollInfo,payrollMovements);
+      let detailHTML  = detail.getContent();
+
+      return res.send(detailHTML);
 
     } catch (error) {
 
