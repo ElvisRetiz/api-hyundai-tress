@@ -97,7 +97,7 @@ const controller = {
           PE_NUMERO: period.getDataValue('PE_NUMERO'),
           PE_TIPO: period.getDataValue('PE_TIPO'),
           CB_CODIGO: parseInt(employeeNumber, 10),
-          $and: Sequelize.literal("CO_NUMERO in (select CO_NUMERO from CONCEPTO where CO_IMPRIME = 'S')")
+          $and: Sequelize.literal(`CO_NUMERO in (select CO_NUMERO from CONCEPTO where CO_IMPRIME = 'S' and CO_TIPO in (${config.typeOfConcept}))`)
         }
       });
 

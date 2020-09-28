@@ -4,7 +4,8 @@ const config = {
   area: "NIVEL2",
   subarea: "NIVEL3",
   employeeType: "NIVEL4",
-  costCenter: "NIVEL5"
+  costCenter: "NIVEL5",
+  typeOfConcept: "1,2"
 };
 
 module.exports = config;
