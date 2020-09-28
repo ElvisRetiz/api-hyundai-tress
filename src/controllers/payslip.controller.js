@@ -3,7 +3,8 @@ const Sequelize = require('sequelize');
 const convertir = require('numero-a-letras')
 
 const config = require('../config');
-const dateHandler = require('../helpers/dateHandler');
+const { addDay } = require('../helpers/dateHandler');
+const { format } = require('../helpers/amountsHandler');
 
 const Period = require('../models/period.model');
 const Payroll = require('../models/payroll.model');
@@ -95,18 +96,18 @@ const controller = {
       });
 
       let payrollInfo = {};
-      payrollInfo.perceptions = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('NO_PERCEPC')).slice(2);
-      payrollInfo.deductions = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('NO_DEDUCCI')).slice(2);
-      payrollInfo.total = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('NO_NETO')).slice(2);
+      payrollInfo.perceptions =format(payroll.getDataValue('NO_PERCEPC'));
+      payrollInfo.deductions = format(payroll.getDataValue('NO_DEDUCCI'));
+      payrollInfo.total = format(payroll.getDataValue('NO_NETO'));
       payrollInfo.totalInText = convertir.NumerosALetras(payroll.getDataValue('NO_NETO'));
-      payrollInfo.dailySalary = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('CB_SALARIO')).slice(2);
-      payrollInfo.integratedSalary = new Intl.NumberFormat("en-IN",{style: "currency", currency: "MXN"}).format(payroll.getDataValue('CB_SAL_INT')).slice(2);
-      payrollInfo.initialDate = dayjs(dateHandler.addDay(period.getDataValue('PE_FEC_INI'))).format('DD/MM/YYYY');
-      payrollInfo.finalDate = dayjs(dateHandler.addDay(period.getDataValue('PE_FEC_FIN'))).format('DD/MM/YYYY');
-      payrollInfo.payDate = dayjs(dateHandler.addDay(period.getDataValue('PE_FEC_PAG'))).format('DD/MM/YYYY');
+      payrollInfo.dailySalary = format(payroll.getDataValue('CB_SALARIO'));
+      payrollInfo.integratedSalary = format(payroll.getDataValue('CB_SAL_INT'));
+      payrollInfo.initialDate = dayjs(addDay(period.getDataValue('PE_FEC_INI'))).format('DD/MM/YYYY');
+      payrollInfo.finalDate = dayjs(addDay(period.getDataValue('PE_FEC_FIN'))).format('DD/MM/YYYY');
+      payrollInfo.payDate = dayjs(addDay(period.getDataValue('PE_FEC_PAG'))).format('DD/MM/YYYY');
       payrollInfo.employeeName = employee.getDataValue('PRETTYNAME');
-      payrollInfo.seniorityDate = dayjs(dateHandler.addDay(employee.getDataValue('CB_FEC_ANT'))).format('DD/MM/YYYY');
-      payrollInfo.admissionDate = dayjs(dateHandler.addDay(employee.getDataValue('CB_FEC_ING'))).format('DD/MM/YYYY');
+      payrollInfo.seniorityDate = dayjs(addDay(employee.getDataValue('CB_FEC_ANT'))).format('DD/MM/YYYY');
+      payrollInfo.admissionDate = dayjs(addDay(employee.getDataValue('CB_FEC_ING'))).format('DD/MM/YYYY');
       payrollInfo.nss = employee.getDataValue('CB_SEGSOC');
       payrollInfo.rfc = employee.getDataValue('CB_RFC');
       payrollInfo.curp = employee.getDataValue('CB_CURP');
@@ -117,6 +118,17 @@ const controller = {
       payrollInfo.companyRfc = company.getDataValue('RS_RFC');
       payrollInfo.costCenter = costCenter.getDataValue('TB_ELEMENT');
 
+      let payrollMovements = [];
+      for (const movement of movements) {
+        let concept = concepts.filter(c => c.getDataValue('CO_NUMERO') === movement.getDataValue('CO_NUMERO'));
+        let conceptObject = {};
+        conceptObject.number = concept[0].getDataValue('CO_NUMERO');
+        conceptObject.description = concept[0].getDataValue('CO_DESCRIP');
+        conceptObject.type = movement.getDataValue('MO_PERCEPC') > 0 || movement.getDataValue('MO_DEDUCCI') < 0 ? "plus" : "minus";
+        conceptObject.amount =  Math.abs(movement.getDataValue('MO_DEDUCCI')) > 0 ? format(movement.getDataValue('MO_DEDUCCI')) : format(movement.getDataValue('MO_PERCEPC'));
+        payrollMovements.push(conceptObject);
+      }
+
       return res.send({
         payroll,
         period,
@@ -126,7 +138,8 @@ const controller = {
         costCenter,
         concepts,
         movements,
-        payrollInfo
+        payrollInfo,
+        payrollMovements
       });
 
     } catch (error) {
