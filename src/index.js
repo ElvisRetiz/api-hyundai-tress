@@ -26,8 +26,8 @@ async function main () {
     if(!(mystr === appkey)) throw new Error('Unauthorized server');
 
     app.listen(port);
-    console.log(chalk.greenBright(`APIRest running on http://localhost:${port}`));
-    console.log(chalk.greenBright(`APIRest running on http://${os.networkInterfaces().Ethernet[os.networkInterfaces().Ethernet.length-1].address}:${port}`));
+    console.log(chalk.greenBright(`APIRest running on http://localhost:${port}/api/`));
+    console.log(chalk.greenBright(`APIRest running on http://${os.networkInterfaces().Ethernet[os.networkInterfaces().Ethernet.length-1].address}:${port}/api/`));
 
   } catch (error) {
 

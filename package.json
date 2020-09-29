@@ -2,9 +2,9 @@
   "name": "api-hyundai-tress",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node start src/index.js",
     "dev": "nodemon src/index.js",
     "build": "nexe src/index.js -r ./src/**/*"
   },
@@ -20,15 +20,11 @@
     "html-pdf": "^2.2.0",
     "node-blob": "0.0.2",
     "numero-a-letras": "^1.0.6",
-    "pm2": "^4.4.1",
     "sequelize": "^6.3.5",
     "tedious": "^9.2.1"
   },
   "devDependencies": {
     "nexe": "^3.3.7",
     "nodemon": "^2.0.4"
-  },
-  "pkg": {
-    "scripts": "./src/**/*.js"
   }
 }
