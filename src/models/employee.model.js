@@ -1,5 +1,9 @@
+const fs = require('fs');
+const path = require('path');
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../db/index');
+
+const config = JSON.parse(fs.readFileSync(path.join(__dirname,'../../','config.json'))).dataConfig;
 
 class Employee extends Model {}
 
@@ -17,19 +21,19 @@ Employee.init({
     type: DataTypes.CHAR,
     allowNull: false
   },
-  CB_NIVEL1: {
+  [`CB_${config.department}`]: {
     type: DataTypes.CHAR,
     allowNull: false
   },
-  CB_NIVEL2: {
+  [`CB_${config.area}`]: {
     type: DataTypes.CHAR,
     allowNull: false
   },
-  CB_NIVEL3: {
+  [`CB_${config.subarea}`]: {
     type: DataTypes.CHAR,
     allowNull: false
   },
-  CB_NIVEL4: {
+  [`CB_${config.employeeType}`]: {
     type: DataTypes.CHAR,
     allowNull: false
   },

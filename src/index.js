@@ -7,11 +7,9 @@ const path = require('path');
 const chalk = require('chalk');
 const app = require("./app");
 
-require('dotenv').config();
-
 console.log(chalk.white('Validating environment...'));
 
-const port = process.env.APP_PORT || 8090
+const port = JSON.parse(fs.readFileSync(path.join(__dirname,'../','config.json'))).appConfig.appPort || 8091
 
 async function main () {
 

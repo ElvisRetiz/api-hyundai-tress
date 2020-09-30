@@ -1,7 +1,9 @@
+const fs = require('fs');
+const path = require('path');
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../db/index');
 
-const config = require('../../config');
+const config = JSON.parse(fs.readFileSync(path.join(__dirname,'../../','config.json'))).dataConfig;
 
 class Type extends Model {}
 

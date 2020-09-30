@@ -4,6 +4,6 @@ const controller = require("../controllers/employee.controller");
 const router = express.Router();
 
 router.get("/",controller.getAllEmployees);
-// router.get("/photos", employeesController.getAllEmployeesPhoto);
+router.get("/photos", controller.getAllPhotos);
 
 module.exports = router;

@@ -1,10 +1,13 @@
+const fs = require('fs');
+const path = require('path');
+
 const Employee = require('../models/employee.model');
 const Department = require('../models/department.model');
 const Area = require('../models/area.model');
 const Subarea = require('../models/subarea.model');
 const Type = require('../models/type.model');
 
-const config = require('../../config');
+const config = JSON.parse(fs.readFileSync(path.join(__dirname,'../../','config.json'))).dataConfig;
 
 const controller = {
   signupEmployee: async (req, res) => {

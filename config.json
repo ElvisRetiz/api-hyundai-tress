@@ -1,9 +1,20 @@
 {
-  "companyCode": "HTSPT",
-  "department": "NIVEL1",
-  "area": "NIVEL2",
-  "subarea": "NIVEL3",
-  "employeeType": "NIVEL4",
-  "costCenter": "NIVEL5",
-  "includeBenefits": false
+  "dataConfig": {
+    "companyCode": "HTSPT",
+    "department": "NIVEL1",
+    "area": "NIVEL2",
+    "subarea": "NIVEL3",
+    "employeeType": "NIVEL4",
+    "costCenter": "NIVEL5",
+    "includeBenefits": false
+  },
+  "appConfig": {
+    "appPort": 8090
+  },
+  "dbConfig": {
+    "dbUser": "sa",
+    "dbPassword": "kitsacv",
+    "dbServer": "ELVIS-RETIZW",
+    "dbName": "KitConsultores"
+  }
 }
