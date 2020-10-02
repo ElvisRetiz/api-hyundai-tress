@@ -4,7 +4,10 @@ const path = require('path');
 const fs = require('fs');
 const convertir = require('numero-a-letras');
 
-const config = JSON.parse(fs.readFileSync(path.join(__dirname,'../../','config.json'))).dataConfig;
+const { arrayToObject } = require('../helpers/configObjectHandler')
+
+let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+const config = arrayToObject(configArray);
 
 const PortableDocumentFormat = require('../helpers/PortableDocumentFormat');
 const { pdfGenerator } = require('../helpers/promiseHandler')

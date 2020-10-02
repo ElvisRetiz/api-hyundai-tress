@@ -1,13 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
+const { arrayToObject } = require('../helpers/configObjectHandler');
+
 const Employee = require('../models/employee.model');
 const Department = require('../models/department.model');
 const Area = require('../models/area.model');
 const Subarea = require('../models/subarea.model');
 const Type = require('../models/type.model');
 
-const config = JSON.parse(fs.readFileSync(path.join(__dirname,'../../','config.json'))).dataConfig;
+let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+const config = arrayToObject(configArray);
 
 const controller = {
   signupEmployee: async (req, res) => {

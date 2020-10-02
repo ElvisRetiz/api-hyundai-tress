@@ -5,11 +5,14 @@ const crypto = require("crypto");
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
-const app = require("./app");
 
+const app = require("./app");
+const { stringToObject } = require("./helpers/configObjectHandler");
+ 
 console.log(chalk.white('Validating environment...'));
 
-const port = JSON.parse(fs.readFileSync(path.join(__dirname,'../','config.json'))).appConfig.appPort || 8091
+let configString = fs.readFileSync(path.join(__dirname,'../','config','app.config')).toString();
+let port = stringToObject(configString).appPort;
 
 async function main () {
 

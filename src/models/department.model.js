@@ -3,7 +3,10 @@ const path = require('path');
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../db/index');
 
-const config = JSON.parse(fs.readFileSync(path.join(__dirname,'../../','config.json'))).dataConfig;
+const { arrayToObject } = require('../helpers/configObjectHandler');
+
+let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+const config = arrayToObject(configArray);
 
 class Department extends Model {}
 
