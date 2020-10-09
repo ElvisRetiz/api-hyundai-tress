@@ -29,7 +29,8 @@ const controller = {
 
       const { day, month, year, paydate } = req.params;
       const employeeNumber = req.params.employee;
-      const conceptsNumber = config.includeBenefits ? '1,2,3,4' : '1,2';
+      const conceptsNumber = config.includeBenefits.toUpperCase() === 'Y' ? '1,2,3,4' : '1,2';
+
       let date;
       
       if(paydate) {

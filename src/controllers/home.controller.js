@@ -1,6 +1,25 @@
+const fs = require('fs');
+const path = require('path');
+
+const sequelize = require('../db/index');
+
 const controller = {
-  getAllRoutes: (req, res) => {
-    res.send("<h1>APIRest hyundai-tress 1.0.0</h1>")
+  getAllRoutes: async (req, res) => {
+    const htmlDocument = fs.readFileSync(path.join(__dirname,'../','assets/html/index.html'), { encoding: 'utf-8'});
+    res.send(htmlDocument);
+  },
+  tasteDB: async (req, res) => {
+    try {
+
+      await sequelize.authenticate();
+      res.send({type: "succes"});
+
+    } catch (error) {
+
+      console.log(err);
+      res.send({type: "fail"});
+      
+    }
   }
 };
 

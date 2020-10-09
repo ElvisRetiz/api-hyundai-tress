@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+  body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background-color: #f5f4f4;
+  }
+  .container {
+    margin-top: 15px;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    box-shadow: #333 10px 10px 10px;
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.25);
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.25);
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0;
+    margin-top: 10px;
+    padding: 10px;
+    height: 20px;
+    width: 90%;
+    border-top: 1px solid #333;
+  }
+  
+  .div-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+  }
+
+  .row p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+  }
+
+  .row-title {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0;
+    margin-top: 10px;
+    padding: 10px;
+    height: 20px;
+    width: 90%;
+  }
+
+  .row-title p {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    color: #0881a3;
+  }
+
+  .title{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  .title h1, small {
+    text-align: end;
+    margin: 0;
+  }
+  
+  .title h1 {
+    font-size: 70px;
+  }
+
+  .title small {
+    margin-left: 10px;
+  }
+
+  #output {
+    margin: 0;
+    padding: 0;
+    margin-left: 10px;
+  }
+  #output-text {
+    margin-left: 10px;
+  }
+
+  .disconnect {
+    width: 10px;
+    height: 10px;
+    margin: 100px auto;
+    background-color: rgb(219, 37, 37);
+    border-radius: 100%;  
+  }
+
+  .connected {
+    width: 10px;
+    height: 10px;
+    margin: 100px auto;
+    background-color: rgb(54, 180, 22);
+    border-radius: 100%;  
+  }
+
+  footer {
+    margin-top: 20px;
+  }
+
+  .spinner {
+    width: 10px;
+    height: 10px;
+    margin: 100px auto;
+    background-color: #333;
+    border-radius: 100%;  
+    -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+    animation: sk-scaleout 1.0s infinite ease-in-out;
+  }
+
+@-webkit-keyframes sk-scaleout {
+  0% { -webkit-transform: scale(0) }
+  100% {
+    -webkit-transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+@keyframes sk-scaleout {
+  0% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 100% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+    opacity: 0;
+  }
+}
+  </style>
+  <title>API Service</title>
+</head>
+<body>
+  <div class="title">
+    <h1>API Service</h1><small>version 1.0.0</small>
+  </div>
+  <div class="container">
+    <div class="row-title">
+      <p><strong>Service</strong></p><p><strong>Status</strong></p>
+    </div>
+    <div class="row">
+      <p><strong>Connection to the database</strong></p><div class="div-row" ><div id="output" class="spinner"></div><small id="output-text">offline</small></div>
+    </div>
+  </div>
+  <footer>
+    For support: <a href="https://desk.zoho.com/portal/kitconsultores/en/home">Generate a ticket</a>
+  </footer>
+  <script async>
+    const output = document.getElementById('output');
+    const outputText = document.getElementById('output-text');
+    fetch('http://localhost:8090/api/test')
+      .then(async response => {
+        let data = await response.json()
+        if (data.type === "succes") {
+          output.classList.remove('spinner');
+          output.classList.add('connected');
+          outputText.innerHTML = "online";
+        }
+        console.log(data)
+      })
+      .catch(err => {
+        output.classList.remove('spinner');
+        output.classList.add('disconnect');
+      });
+  </script>
+</body>
+</html>
