@@ -177,6 +177,9 @@
           output.classList.remove('spinner');
           output.classList.add('connected');
           outputText.innerHTML = "online";
+        }else {
+          output.classList.remove('spinner');
+          output.classList.add('disconnect');
         }
         console.log(data)
       })
