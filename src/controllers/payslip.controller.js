@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 const path = require('path');
 const fs = require('fs');
 const convertir = require('numero-a-letras');
+const chalk = require('chalk');
 
 const { arrayToObject } = require('../helpers/configObjectHandler')
 
@@ -43,7 +44,8 @@ const controller = {
       const period = await Period.findOne({
         where: {
           PE_FEC_PAG: date
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to period"))
       });
 
       const payroll = await Payroll.findOne({
@@ -52,7 +54,8 @@ const controller = {
           PE_TIPO: period.getDataValue('PE_TIPO'),
           PE_NUMERO: period.getDataValue('PE_NUMERO'),
           CB_CODIGO: parseInt(employeeNumber, 10)
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to payroll"))
       });
 
       const employee = await Employee.findOne({
@@ -68,31 +71,36 @@ const controller = {
         ],
         where: {
           CB_CODIGO: parseInt(employeeNumber, 10)
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to employee"))
       });
 
       const businessName = await BusinessName.findOne({
         where: {
           TB_CODIGO: employee.getDataValue('CB_PATRON')
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to buisiness name"))
       });
 
       const company = await Company.findOne({
         where: {
           RS_CODIGO: businessName.getDataValue('RS_CODIGO')
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to company"))
       });
 
       const costCenter = await CostCenter.findOne({
         where: {
           TB_CODIGO: payroll.getDataValue(`CB_${config.costCenter}`)
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to cost center"))
       });
 
       const concepts = await Concept.findAll({
         where: {
           CO_IMPRIME: 'S'
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to concepts"))
       });
 
       const movements = await Movement.findAll({
@@ -102,9 +110,11 @@ const controller = {
           PE_TIPO: period.getDataValue('PE_TIPO'),
           CB_CODIGO: parseInt(employeeNumber, 10),
           $and: Sequelize.literal(`CO_NUMERO in (select CO_NUMERO from CONCEPTO where CO_IMPRIME = 'S' and CO_TIPO in (${conceptsNumber}))`)
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to movements"))
       });
 
+      console.log(chalk.white("Initializing payroll info"))
       let payrollInfo = {};
       payrollInfo.perceptions =format(payroll.getDataValue('NO_PERCEPC'));
       payrollInfo.deductions = format(payroll.getDataValue('NO_DEDUCCI'));
@@ -129,7 +139,9 @@ const controller = {
       payrollInfo.companyAddress = `${company.getDataValue('RS_CALLE')}, ${company.getDataValue('RS_NUMEXT')}, ${company.getDataValue('RS_COLONIA')}, ${company.getDataValue('RS_CIUDAD')}`;
       payrollInfo.companyRfc = company.getDataValue('RS_RFC');
       payrollInfo.costCenter = costCenter.getDataValue('TB_ELEMENT');
+      console.log(chalk.green("Payroll info initialized"))
 
+      console.log(chalk.white("Initializing payroll mov"))
       let payrollMovements = [];
       for (const movement of movements) {
         let concept = concepts.filter(c => c.getDataValue('CO_NUMERO') === movement.getDataValue('CO_NUMERO'));
@@ -140,16 +152,27 @@ const controller = {
         conceptObject.amount =  Math.abs(movement.getDataValue('MO_DEDUCCI')) > 0 ? format(movement.getDataValue('MO_DEDUCCI')) : format(movement.getDataValue('MO_PERCEPC'));
         payrollMovements.push(conceptObject);
       }
+      console.log(chalk.green("Payroll mov initialized"))
 
+      console.log(chalk.white("Initializing payroll detail"))
       let detail = new PortableDocumentFormat(payrollInfo,payrollMovements);
       let detailHTML  = detail.getContent();
+      console.log(chalk.green("Payroll detail initialized"))
 
-      const pdf = await pdfGenerator(detailHTML, path.join(__dirname, "../../","assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`));
+      console.log(chalk.white("Initializing payroll pdf"))
+      console.log("ESTE ES EL RESOLVE: ",path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`));
+      // console.log("ESTE ES EL NORMAL: ",path.join(__dirname, "../../","assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`));
+      const pathPDF = `${path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`)}`
+      console.log("ESTA ES LA VARIABLE, ", pathPDF);
+      const pdf = await pdfGenerator(detailHTML, pathPDF);
+      console.log(chalk.green("Payroll pdf initialized"))
 
-      fs.unlink(path.join(__dirname, "../../","assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), err => {
+      console.log(chalk.white("Removing payroll pdf"))
+      fs.unlink(path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), err => {
         if (err) throw err;
-        console.log(path.join(__dirname, "../../","assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), ' was deleted');
+        console.log(path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), ' was deleted');
       });
+      console.log(chalk.green("Payroll pdf removed"))
 
       return res.send({
         payslipbinfile: pdf

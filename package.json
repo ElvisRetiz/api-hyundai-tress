@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "build": "nexe src/index.js -r ./src/**/*"
+    "dev": "nodemon src/index.js"
   },
   "author": "Elvis Retiz",
   "license": "MIT",
@@ -20,12 +19,22 @@
     "html-pdf": "^2.2.0",
     "node-blob": "0.0.2",
     "numero-a-letras": "^1.0.6",
-    "pm2": "^4.5.0",
     "sequelize": "^6.3.5",
     "tedious": "^9.2.1"
   },
   "devDependencies": {
-    "nexe": "^3.3.7",
     "nodemon": "^2.0.4"
+  },
+  "bin": "src/index.js",
+  "pkg": {
+    "assets": [
+      "config/**/*",
+      "app.key",
+      "src/assets/**/*",
+      "assets/**/*"
+    ],
+    "scripts": [
+      "src/**/*.js"
+    ]
   }
 }
