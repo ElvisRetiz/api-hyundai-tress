@@ -1,0 +1,60 @@
+Starting...
+Validating environment...
+APIRest running on http://localhost:8090/api/
+APIRest running on http://192.168.1.77:8090/api/
+Mon, 26 Oct 2020 21:11:48 GMT tedious deprecated The default value for "config.options.validateBulkLoadParameters" will change from `false` to `true` in the next major version of `tedious`. Set the value to `true` or `false` explicitly to silence this message. at ..\..\..\..\..\..\..\snapshot\api-hyundai-tress\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:63:28
+(node:21604) [SEQUELIZE0006] DeprecationWarning: This database engine version is not supported, please update your database server. More information https://github.com/sequelize/sequelize/blob/master/ENGINE.md
+Executing (default): SELECT 1+1 AS result
+Successful query to employees
+Successful query to employees
+Executing (default): SELECT [CB_CODIGO], [IM_BLOB] FROM [IMAGEN] AS [Photo] WHERE [Photo].[IM_TIPO] = N'FOTO' AND [Photo].[CB_CODIGO] IN (1, 2, 3, 4, 5, 6, 7);
+Successful query to employees
+Executing (default): SELECT [CB_CODIGO] AS [number], [PRETTYNAME] AS [name], [CB_NIVEL1] AS [department], [CB_NIVEL2] AS [area], [CB_NIVEL3] AS [subarea], [CB_NIVEL4] AS [type] FROM [COLABORA] AS [Employee] WHERE [Employee].[CB_CODIGO] = N'1';
+Executing (default): SELECT [TB_ELEMENT] FROM [NIVEL1] AS [Department] WHERE [Department].[TB_CODIGO] = N'PA    ';
+Executing (default): SELECT [TB_ELEMENT] FROM [NIVEL2] AS [Area] WHERE [Area].[TB_CODIGO] = N'01    ';
+Executing (default): SELECT [TB_ELEMENT] FROM [NIVEL3] AS [Subarea] WHERE [Subarea].[TB_CODIGO] = N'AS001 ';
+Executing (default): SELECT [TB_ELEMENT] FROM [NIVEL4] AS [Type] WHERE [Type].[TB_CODIGO] = N'BA    ';
+Successful query to period
+Successful query to payroll
+Successful query to employee
+Successful query to buisiness name
+Successful query to company
+Successful query to cost center
+Successful query to concepts
+Successful query to movements
+Initializing payroll info
+Payroll info initialized
+Initializing payroll mov
+Payroll mov initialized
+Initializing payroll detail
+Payroll detail initialized
+Initializing payroll pdf
+ESTE ES EL RESOLVE:  C:\Users\elvis\Documents\Elvis\javascript\express\api-hyundai-tress\assets\HTSPT-1-20200214.pdf
+ESTA ES LA VARIABLE,  C:\Users\elvis\Documents\Elvis\javascript\express\api-hyundai-tress\assets\HTSPT-1-20200214.pdf
+ENTRE!!!!
+ANTES DE CREAR:  C:\Users\elvis\Documents\Elvis\javascript\express\api-hyundai-tress\assets\HTSPT-1-20200214.pdf
+{
+  filename: 'C:\\Users\\elvis\\Documents\\Elvis\\javascript\\express\\api-hyundai-tress\\assets\\HTSPT-1-20200214.pdf'
+}
+Payroll pdf initialized
+Removing payroll pdf
+Payroll pdf removed
+C:\Users\elvis\Documents\Elvis\javascript\express\api-hyundai-tress\assets\HTSPT-1-20200214.pdf  was deleted
+yyyy-32-Mo 03:32:50: Starting...
+yyyy-32-Mo 03:32:51: Validating environment...
+yyyy-32-Mo 03:32:51: APIRest running on http://localhost:8090/api/
+yyyy-32-Mo 03:32:51: APIRest running on http://192.168.1.77:8090/api/
+yyyy-33-Mo 03:33:00: Mon, 26 Oct 2020 21:33:00 GMT tedious deprecated The default value for "config.options.validateBulkLoadParameters" will change from `false` to `true` in the next major version of `tedious`. Set the value to `true` or `false` explicitly to silence this message. at ..\..\..\..\..\..\..\snapshot\api-hyundai-tress\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:63:28
+yyyy-33-Mo 03:33:01: (node:29684) [SEQUELIZE0006] DeprecationWarning: This database engine version is not supported, please update your database server. More information https://github.com/sequelize/sequelize/blob/master/ENGINE.md
+yyyy-33-Mo 03:33:01: Executing (default): SELECT 1+1 AS result
+2020-10-26: Starting...
+2020-10-26: Validating environment...
+2020-10-26: APIRest running on http://localhost:8090/api/
+2020-10-26: APIRest running on http://192.168.1.77:8090/api/
+2020-10-26 03:35:10: Starting...
+2020-10-26 03:35:11: Validating environment...
+2020-10-26 03:35:11: APIRest running on http://localhost:8090/api/
+2020-10-26 03:35:11: APIRest running on http://192.168.1.77:8090/api/
+2020-10-26 03:35:17: Mon, 26 Oct 2020 21:35:17 GMT tedious deprecated The default value for "config.options.validateBulkLoadParameters" will change from `false` to `true` in the next major version of `tedious`. Set the value to `true` or `false` explicitly to silence this message. at ..\..\..\..\..\..\..\snapshot\api-hyundai-tress\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:63:28
+2020-10-26 03:35:18: (node:27508) [SEQUELIZE0006] DeprecationWarning: This database engine version is not supported, please update your database server. More information https://github.com/sequelize/sequelize/blob/master/ENGINE.md
+2020-10-26 03:35:18: Executing (default): SELECT 1+1 AS result
