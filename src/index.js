@@ -11,7 +11,7 @@ const { stringToObject } = require("./helpers/configObjectHandler");
  
 console.log(chalk.white('Validating environment...'));
 
-let configString = fs.readFileSync(path.join(__dirname,'../','config','app.config')).toString();
+let configString = fs.readFileSync(path.resolve(process.cwd(),'config/app.config')).toString();
 let port = stringToObject(configString).appPort;
 
 async function main () {
