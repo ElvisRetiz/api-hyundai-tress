@@ -4,7 +4,7 @@ const { Sequelize } = require('sequelize');
 
 const { arrayToObject } = require('../helpers/configObjectHandler');
 
-let configArray = fs.readFileSync(path.join(__dirname,'../../','/config/','db.config')).toString().split(',');
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/db.config')).toString().split(',');
 let { dbUser, dbPassword, dbServer, dbName } = arrayToObject(configArray);
 
 const sequelize = new Sequelize(dbName, dbUser, dbPassword, {

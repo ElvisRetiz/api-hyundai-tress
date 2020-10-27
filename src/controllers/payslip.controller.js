@@ -7,7 +7,7 @@ const chalk = require('chalk');
 
 const { arrayToObject } = require('../helpers/configObjectHandler')
 
-let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const config = arrayToObject(configArray);
 
 const PortableDocumentFormat = require('../helpers/PortableDocumentFormat');
@@ -160,19 +160,8 @@ const controller = {
       console.log(chalk.green("Payroll detail initialized"))
 
       console.log(chalk.white("Initializing payroll pdf"))
-      console.log("ESTE ES EL RESOLVE: ",path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`));
-      // console.log("ESTE ES EL NORMAL: ",path.join(__dirname, "../../","assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`));
-      const pathPDF = `${path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`)}`
-      console.log("ESTA ES LA VARIABLE, ", pathPDF);
-      const pdf = await pdfGenerator(detailHTML, pathPDF);
+      const pdf = await pdfGenerator(detailHTML);
       console.log(chalk.green("Payroll pdf initialized"))
-
-      console.log(chalk.white("Removing payroll pdf"))
-      fs.unlink(path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), err => {
-        if (err) throw err;
-        console.log(path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), ' was deleted');
-      });
-      console.log(chalk.green("Payroll pdf removed"))
 
       return res.send({
         payslipbinfile: pdf

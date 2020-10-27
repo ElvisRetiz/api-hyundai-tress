@@ -9,7 +9,7 @@ const Area = require('../models/area.model');
 const Subarea = require('../models/subarea.model');
 const Type = require('../models/type.model');
 
-let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const config = arrayToObject(configArray);
 
 const controller = {

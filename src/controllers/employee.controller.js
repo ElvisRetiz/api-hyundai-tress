@@ -9,7 +9,7 @@ const { arrayToObject } = require('../helpers/configObjectHandler');
 const Employee = require('../models/employee.model');
 const Photo = require('../models/photo.model');
 
-let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const config = arrayToObject(configArray);
 
 const controller = {
