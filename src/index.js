@@ -22,7 +22,7 @@ async function main () {
     mykey.update(`${os.platform()}${os.hostname()}${os.cpus()[0].mode}`,'utf8','hex');
     let mystr = mykey.digest('hex');
 
-    let appkey = fs.readFileSync(path.join(__dirname,'../','app.key')).toString();
+    let appkey = fs.readFileSync(path.resolve(process.cwd(),'app.key')).toString();
 
     if(!(mystr === appkey)) throw new Error('Unauthorized server');
 

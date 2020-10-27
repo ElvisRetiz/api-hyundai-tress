@@ -35,6 +35,9 @@
     ],
     "scripts": [
       "src/**/*.js"
+    ],
+    "targets": [
+      "node12-win-x64"
     ]
   }
 }
