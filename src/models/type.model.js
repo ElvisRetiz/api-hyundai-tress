@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../db/index');
+const sequelize = require('../db/db.comparte');
 
 const { arrayToObject } = require('../helpers/configObjectHandler');
 
@@ -17,10 +17,6 @@ Type.init({
     primaryKey: true
   },
   TB_ELEMENT: {
-    type: DataTypes.CHAR,
-    allowNull: false
-  },
-  TB_INGLES: {
     type: DataTypes.CHAR,
     allowNull: false
   }

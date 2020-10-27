@@ -61,10 +61,10 @@ const controller = {
 
       let subarea = await Subarea.findOne({
         attributes: [
-          'TB_ELEMENT'
+          'PU_DESCRIP'
         ],
         where: {
-          TB_CODIGO: employee.getDataValue('subarea')
+          PU_CODIGO: employee.getDataValue('subarea')
         }
       });
       employee.setDataValue('subarea', subarea.dataValues.TB_ELEMENT);
