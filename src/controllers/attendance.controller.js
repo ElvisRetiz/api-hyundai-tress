@@ -1,5 +1,6 @@
 const dayjs = require('dayjs');
 const Sequelize = require('sequelize');
+const chalk = require('chalk');
 
 const Day = require('../models/day.model');
 const Record = require('../models/record.model');
@@ -16,18 +17,36 @@ const controller = {
           CB_CODIGO: parseInt(employee, 10),
           AU_FECHA: Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('AU_FECHA')),parseInt(month, 10)),
           $and: Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('AU_FECHA')),parseInt(year, 10))
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to day"))
       });
+
+      if (days.length === 0) {
+        return res.send({
+          message: "No information was found with the specified parameters",
+          data: []
+        })
+      };
 
       let records = await Record.findAll({
         where:{
           CB_CODIGO: parseInt(employee, 10),
           AU_FECHA: Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('AU_FECHA')),parseInt(month, 10)),
           $and: Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('AU_FECHA')),parseInt(year, 10))
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to record"))
       });
 
-      let incidences = await Incidence.findAll();
+      if (records.length === 0) {
+        return res.send({
+          message: "No information was found with the specified parameters",
+          data: []
+        })
+      };
+
+      let incidences = await Incidence.findAll({
+        logging: () => console.log(chalk.green("Successful query to incidence"))
+      });
 
       for (const day of days) {
 
@@ -66,15 +85,19 @@ const controller = {
 
       }
 
-      return res.send(attendance);
+      return res.send({
+        message: "Succes.",
+        data: attendance
+      });
 
     } catch (error) {
 
       console.error(error);
 
       return res.send({
-        message: "Something goes wrong!"
-      })
+        message: "No information was found with the specified parameters",
+        data: []
+      });
       
     }
   }

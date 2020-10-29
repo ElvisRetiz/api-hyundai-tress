@@ -32,14 +32,18 @@ const controller = {
         employee.setDataValue('index', index+1);
       });
 
-      return res.send(employees);
+      return res.send({
+        message: "Succes.",
+        data: employees
+      });
 
     } catch (error) {
 
       console.error(error);
 
       return res.send({
-        message: "Something goes wrong!"
+        message: "The request did not return information.",
+        data: []
       });
       
     }
