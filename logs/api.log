@@ -4348,3 +4348,22 @@ yyyy-33-Mo 03:33:01: Executing (default): SELECT 1+1 AS result
 2020-10-27 04:55:35: Payroll detail initialized
 2020-10-27 04:55:35: Initializing payroll pdf
 2020-10-27 04:55:39: Payroll pdf initialized
+2020-10-28 10:33:29: Starting...
+2020-10-28 10:33:30: Validating environment...
+2020-10-28 10:33:30: APIRest running on http://localhost:8090/api/
+2020-10-28 10:33:30: APIRest running on http://192.168.1.65:8090/api/
+2020-10-28 10:35:05: Starting...
+2020-10-28 10:35:06: Validating environment...
+2020-10-28 10:35:06: APIRest running on http://localhost:5060/api/
+2020-10-28 10:35:06: APIRest running on http://192.168.1.65:5060/api/
+2020-10-28 10:36:17: Thu, 29 Oct 2020 04:36:17 GMT tedious deprecated The default value for "config.options.validateBulkLoadParameters" will change from `false` to `true` in the next major version of `tedious`. Set the value to `true` or `false` explicitly to silence this message. at ..\..\..\..\..\..\..\snapshot\api-hyundai-tress\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:63:28
+2020-10-28 10:36:20: (node:30400) [SEQUELIZE0006] DeprecationWarning: This database engine version is not supported, please update your database server. More information https://github.com/sequelize/sequelize/blob/master/ENGINE.md
+2020-10-28 10:36:20: Successful query to employee
+2020-10-28 10:36:20: Successful query to departmen
+2020-10-28 10:36:20: Successful query to area
+2020-10-28 10:36:20: Successful query to subarea
+2020-10-28 10:36:20: Successful query to type
+2020-10-28 10:38:12: Successful query to employees
+2020-10-28 10:39:15: Successful query to day
+2020-10-28 10:39:16: Successful query to record
+2020-10-28 10:39:16: Successful query to incidence

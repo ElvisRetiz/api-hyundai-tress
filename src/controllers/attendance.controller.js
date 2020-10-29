@@ -77,8 +77,8 @@ const controller = {
           dayObject.description = incidence[0].TB_ELEMENT;
           dayObject.descriptionEN = incidence[0].TB_INGLES;
         }else {
-          dayObject.description = 'Normal';
-          dayObject.descriptionEN = 'Normal';
+          dayObject.description = 'Ordinaria';
+          dayObject.descriptionEN = 'Ordinary';
         }
 
         attendance.push(dayObject)
