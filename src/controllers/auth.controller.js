@@ -1,14 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
+const { encode } = require('base64-arraybuffer');
 
-const { arrayToObject } = require('../helpers/configObjectHandler');
+const { arrayToObject, setAndDeletePropertyWithNewValue, setAndDeleteProperty, setAndDeleteDateProperty } = require('../helpers/configObjectHandler');
+const { format } = require('../helpers/stringsHandler');
 
 const Employee = require('../models/employee.model');
 const Department = require('../models/department.model');
 const Area = require('../models/area.model');
 const Subarea = require('../models/subarea.model');
 const Type = require('../models/type.model');
+const BusinessName = require('../models/business-name.model');
+const Company = require('../models/company.model');
+const Photo = require('../models/photo.model');
 
 let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const config = arrayToObject(configArray);
@@ -24,14 +29,6 @@ const controller = {
         where: {
           CB_CODIGO: employeeNumber
         },
-        attributes:[
-          ['CB_CODIGO', 'number'],
-          ['PRETTYNAME', 'name'],
-          [`CB_${config.department}`, 'department'],
-          [`CB_${config.area}`, 'area'],
-          [`CB_${config.subarea}`, 'subarea'],
-          [`CB_${config.employeeType}`, 'type']
-        ],
         logging: () => console.log(chalk.green("Successful query to employee"))
       });
 
@@ -43,12 +40,31 @@ const controller = {
         }
       });
 
+      setAndDeleteProperty(employee,'CB_CODIGO','PERNR');
+      setAndDeleteDateProperty(employee,'CB_FEC_NAC','GBDAT');
+      setAndDeleteProperty(employee,'CB_SEGSOC','NIMSS');
+      setAndDeleteProperty(employee,'CB_RFC','NURFC');
+      setAndDeleteProperty(employee,'CB_CURP','NCURP');
+      setAndDeletePropertyWithNewValue(employee,'PRETTYNAME','ENAME',format(employee.getDataValue('PRETTYNAME')));
+
+      const businessNames = await BusinessName.findAll({
+        logging: () => console.log(chalk.green("Successful query to buisiness name"))
+      });
+
+      const companies = await Company.findAll({
+        logging: () => console.log(chalk.green("Successful query to company"))
+      });
+
+      let businessName = businessNames.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue('CB_PATRON'));
+      let company = companies.find(element => element.getDataValue('RS_CODIGO') === businessName.getDataValue('RS_CODIGO'));
+      setAndDeletePropertyWithNewValue(employee,'CB_PATRON','BTEXT',company.getDataValue('RS_CIUDAD'));
+
       let department = await Department.findOne({
         attributes: [
           'TB_ELEMENT'
         ],
         where: {
-          TB_CODIGO: employee.getDataValue('department')
+          TB_CODIGO: employee.getDataValue(`CB_${config.department}`)
         },
         logging: () => console.log(chalk.green("Successful query to departmen"))
       });
@@ -61,14 +77,14 @@ const controller = {
         }
       });
 
-      employee.setDataValue('department', department.dataValues.TB_ELEMENT);
+      setAndDeletePropertyWithNewValue(employee,`CB_${config.department}`,'ZMORGTX05',department.getDataValue('TB_ELEMENT'));
 
       let area = await Area.findOne({
         attributes: [
           'TB_ELEMENT'
         ],
         where: {
-          TB_CODIGO: employee.getDataValue('area')
+          TB_CODIGO: employee.getDataValue(`CB_${config.area}`)
         },
         logging: () => console.log(chalk.green("Successful query to area"))
       });
@@ -81,14 +97,14 @@ const controller = {
         }
       });
 
-      employee.setDataValue('area', area.dataValues.TB_ELEMENT);
+      setAndDeletePropertyWithNewValue(employee,`CB_${config.area}`,'AREA',area.getDataValue('TB_ELEMENT'));
 
       let subarea = await Subarea.findOne({
         attributes: [
           'PU_DESCRIP'
         ],
         where: {
-          PU_CODIGO: employee.getDataValue('subarea')
+          PU_CODIGO: employee.getDataValue(`CB_${config.subarea}`)
         },
         logging: () => console.log(chalk.green("Successful query to subarea"))
       });
@@ -101,30 +117,36 @@ const controller = {
         }
       });
 
-      employee.setDataValue('subarea', subarea.dataValues.TB_ELEMENT);
+      setAndDeletePropertyWithNewValue(employee,`CB_${config.subarea}`,'SAREA',subarea.getDataValue('PU_DESCRIP'));
 
       let type = await Type.findOne({
         attributes: [
           'TB_ELEMENT'
         ],
         where: {
-          TB_CODIGO: employee.getDataValue('type')
+          TB_CODIGO: employee.getDataValue(`CB_${config.employeeType}`)
         },
         logging: () => console.log(chalk.green("Successful query to type"))
       });
 
-      if(type === null) return res.send({
-        message: "No information was found with the specified parameters",
-        data: {
-          found: "N",
-          result: "E"
-        }
+      setAndDeletePropertyWithNewValue(employee,`CB_${config.employeeType}`,'PTEXT',type === null ? "" : type.getDataValue('TB_ELEMENT'));
+
+      let photo = await Photo.findOne({
+        where: {
+          IM_TIPO: "FOTO",
+          CB_CODIGO: employeeNumber
+        },
+        logging: () => console.log(chalk.green("Successful query to photos"))
       });
 
-      employee.setDataValue('type', type.dataValues.TB_ELEMENT);
+      employee.setDataValue('PHOTO64', photo === null ? "" : encode(photo.getDataValue('IM_BLOB')));
+      employee.setDataValue('FOUND', 'Y');
+      employee.setDataValue('RESULT', 'S');
 
-      employee.setDataValue('found', "Y");
-      employee.setDataValue('result', "S");
+      delete employee.dataValues.CB_ACTIVO;
+      delete employee.dataValues.CB_FEC_ANT;
+      delete employee.dataValues.CB_FEC_ING;
+      delete employee.dataValues.CB_INFCRED;
 
       return res.send({
         message: "Succes.",

@@ -9,6 +9,10 @@ BusinessName.init({
     allowNull: false,
     primaryKey: true
   },
+  TB_CODIGO: {
+    type: DataTypes.CHAR,
+    allowNull: false
+  },
   TB_NUMREG: {
     type: DataTypes.CHAR,
     allowNull: false

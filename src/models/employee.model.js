@@ -52,6 +52,10 @@ Employee.init({
     type: DataTypes.DATEONLY,
     allowNull: false
   },
+  CB_FEC_NAC: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
   CB_SEGSOC: {
     type: DataTypes.CHAR,
     allowNull: false

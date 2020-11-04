@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const dayjs = require('dayjs');
 const Sequelize = require('sequelize');
 const chalk = require('chalk');
@@ -5,6 +7,11 @@ const chalk = require('chalk');
 const Day = require('../models/day.model');
 const Record = require('../models/record.model');
 const Incidence = require('../models/incidence.model');
+
+const { arrayToObject } = require('../helpers/configObjectHandler');
+
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
+const config = arrayToObject(configArray);
 
 const controller = {
   getAttendanceByMonth: async (req, res) => {
@@ -52,33 +59,36 @@ const controller = {
 
         let dayObject = {};
 
+        dayObject.CCODE = config.companyCode;
+        dayObject.EMPLOYEEID = parseInt(employee,10);
+
         //remove if is necesary
         let date = new Date(day.getDataValue('AU_FECHA'))
         date.setDate(date.getDate() +1 )
 
-        dayObject.date = dayjs(date).format("DD/MM/YYYY");
+        dayObject.DATE = dayjs(date).format("DD/MM/YYYY");
         
         for (const record of records) {
           if (dayjs(day.getDataValue('AU_FECHA')).format() === dayjs(record.getDataValue('AU_FECHA')).format()) {
             if (record.getDataValue('CH_TIPO') === 1) {
-              dayObject.checkin =  record.getDataValue('CH_H_REAL');
+              dayObject.CHECKIN =  record.getDataValue('CH_H_REAL');
             } else {
-              dayObject.checkout = record.getDataValue('CH_H_REAL');
+              dayObject.CHECKOUT = record.getDataValue('CH_H_REAL');
             }
           }
         }
         
-        if (!dayObject.hasOwnProperty('checkin')) dayObject.checkin = ""
+        if (!dayObject.hasOwnProperty('CHECKIN')) dayObject.CHECKIN = ""
 
-        if (!dayObject.hasOwnProperty('checkout')) dayObject.checkout = ""
+        if (!dayObject.hasOwnProperty('CHECKOUT')) dayObject.CHECKOUT = ""
 
         if (day.getDataValue('AU_TIPO') !== "   ") {
           let incidence = incidences.filter(inc => inc.getDataValue('TB_CODIGO') === day.getDataValue('AU_TIPO'));
-          dayObject.description = incidence[0].TB_ELEMENT;
-          dayObject.descriptionEN = incidence[0].TB_INGLES;
+          dayObject.DESCRIPTION = incidence[0].TB_ELEMENT;
+          dayObject.DESCRIPTIONEN = incidence[0].TB_INGLES;
         }else {
-          dayObject.description = 'Ordinaria';
-          dayObject.descriptionEN = 'Ordinary';
+          dayObject.DESCRIPTION = 'Ordinaria';
+          dayObject.DESCRIPTIONEN = 'Ordinary';
         }
 
         attendance.push(dayObject)

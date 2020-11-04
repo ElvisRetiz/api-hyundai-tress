@@ -4367,3 +4367,25 @@ yyyy-33-Mo 03:33:01: Executing (default): SELECT 1+1 AS result
 2020-10-28 10:39:15: Successful query to day
 2020-10-28 10:39:16: Successful query to record
 2020-10-28 10:39:16: Successful query to incidence
+2020-10-28 10:50:18: Starting...
+2020-10-28 10:50:19: Validating environment...
+2020-10-28 10:50:19: APIRest running on http://localhost:5060/api/
+2020-10-28 10:50:19: APIRest running on http://192.168.1.65:5060/api/
+2020-10-28 10:51:50: Thu, 29 Oct 2020 04:51:50 GMT tedious deprecated The default value for "config.options.validateBulkLoadParameters" will change from `false` to `true` in the next major version of `tedious`. Set the value to `true` or `false` explicitly to silence this message. at ..\..\..\..\..\..\..\snapshot\api-hyundai-tress\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:63:28
+2020-10-28 10:51:50: (node:34432) [SEQUELIZE0006] DeprecationWarning: This database engine version is not supported, please update your database server. More information https://github.com/sequelize/sequelize/blob/master/ENGINE.md
+2020-10-28 10:51:50: Successful query to employees
+2020-10-28 10:54:13: Successful query to employee
+2020-10-28 10:54:13: Successful query to departmen
+2020-10-28 10:54:13: Successful query to area
+2020-10-28 10:54:13: Successful query to subarea
+2020-10-28 10:54:13: Successful query to type
+2020-10-28 10:54:24: Successful query to day
+2020-10-28 10:54:24: Successful query to record
+2020-10-28 10:54:24: Successful query to incidence
+2020-10-29 09:17:30: Starting...
+2020-10-29 09:17:32: Validating environment...
+2020-10-29 09:17:32: APIRest running on http://localhost:5060/api/
+2020-10-29 09:17:32: APIRest running on http://192.168.1.65:5060/api/
+2020-10-29 09:18:31: Thu, 29 Oct 2020 15:18:31 GMT tedious deprecated The default value for "config.options.validateBulkLoadParameters" will change from `false` to `true` in the next major version of `tedious`. Set the value to `true` or `false` explicitly to silence this message. at ..\..\..\..\..\..\..\snapshot\api-hyundai-tress\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:63:28
+2020-10-29 09:18:33: (node:16196) [SEQUELIZE0006] DeprecationWarning: This database engine version is not supported, please update your database server. More information https://github.com/sequelize/sequelize/blob/master/ENGINE.md
+2020-10-29 09:18:33: Executing (default): SELECT 1+1 AS result

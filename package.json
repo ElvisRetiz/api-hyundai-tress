@@ -30,7 +30,6 @@
     "assets": [
       "config/**/*",
       "app.key",
-      "src/assets/**/*",
       "assets/**/*"
     ],
     "scripts": [
