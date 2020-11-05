@@ -28,7 +28,6 @@ async function main () {
 
     app.listen(port);
     console.log(chalk.greenBright(`APIRest running on http://localhost:${port}/api/`));
-    console.log(chalk.greenBright(`APIRest running on http://${os.networkInterfaces().Ethernet[os.networkInterfaces().Ethernet.length-1].address}:${port}/api/`));
 
   } catch (error) {
 
