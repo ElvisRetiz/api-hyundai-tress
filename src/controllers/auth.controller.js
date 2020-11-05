@@ -148,10 +148,7 @@ const controller = {
       delete employee.dataValues.CB_FEC_ING;
       delete employee.dataValues.CB_INFCRED;
 
-      return res.send({
-        message: "Succes.",
-        data: employee
-      });
+      return res.send(employee);
 
     } catch (error) {
 

@@ -95,10 +95,7 @@ const controller = {
 
       }
 
-      return res.send({
-        message: "Succes.",
-        data: attendance
-      });
+      return res.send(attendance);
 
     } catch (error) {
 

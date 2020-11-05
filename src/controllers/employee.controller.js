@@ -104,10 +104,7 @@ const controller = {
         delete employee.dataValues.CB_INFCRED;
       });
 
-      return res.send({
-        message: "Succes.",
-        data: employees
-      });
+      return res.send(employees);
 
     } catch (error) {
 
@@ -151,9 +148,9 @@ const controller = {
 
       for (const photo of photos) {
         let employeesObject = {};
-        employeesObject.companyCode = config.companyCode;
-        employeesObject.number = photo.getDataValue('CB_CODIGO');
-        employeesObject.photo = encode(photo.getDataValue('IM_BLOB'));
+        employeesObject.CCODE = config.companyCode;
+        employeesObject.EMPLOYEEID = photo.getDataValue('CB_CODIGO');
+        employeesObject.PHOTO = encode(photo.getDataValue('IM_BLOB'));
         employeesPhotos.push(employeesObject);
       }
 
@@ -162,7 +159,8 @@ const controller = {
     } catch (error) {
 
       return res.send({
-        message: "Something goes wrong!"
+        message: "No information was found with the specified parameters",
+        data: []
       });
       
     }

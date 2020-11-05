@@ -164,7 +164,9 @@ const controller = {
       console.log(chalk.green("Payroll pdf initialized"))
 
       return res.send({
-        payslipbinfile: pdf
+        CCODE: config.companyCode,
+        EMPLOYEEID: parseInt(employeeNumber),
+        PAYSLIPBINFILE: pdf
       });
 
     } catch (error) {
@@ -172,7 +174,11 @@ const controller = {
       console.error(error);
 
       return res.send({
-        message: "Something goes wrong!"
+        message: "No information was found with the specified parameters",
+        data: {
+          found: "N",
+          result: "E"
+        }
       })
       
     }
