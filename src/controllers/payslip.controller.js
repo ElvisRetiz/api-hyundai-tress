@@ -41,9 +41,28 @@ const controller = {
         date = `${year}${month}${day}`;
       }
 
+      const employee = await Employee.findOne({
+        attributes: [
+          'PRETTYNAME',
+          'CB_PATRON',
+          'CB_FEC_ANT',
+          'CB_FEC_ING',
+          'CB_SEGSOC',
+          'CB_RFC',
+          'CB_CURP',
+          'CB_INFCRED',
+          'CB_NOMINA'
+        ],
+        where: {
+          CB_CODIGO: parseInt(employeeNumber, 10)
+        },
+        logging: () => console.log(chalk.green("Successful query to employee"))
+      });
+
       const period = await Period.findOne({
         where: {
-          PE_FEC_PAG: date
+          PE_FEC_PAG: date,
+          PE_TIPO: employee.getDataValue('CB_NOMINA')
         },
         logging: () => console.log(chalk.green("Successful query to period"))
       });
@@ -56,23 +75,6 @@ const controller = {
           CB_CODIGO: parseInt(employeeNumber, 10)
         },
         logging: () => console.log(chalk.green("Successful query to payroll"))
-      });
-
-      const employee = await Employee.findOne({
-        attributes: [
-          'PRETTYNAME',
-          'CB_PATRON',
-          'CB_FEC_ANT',
-          'CB_FEC_ING',
-          'CB_SEGSOC',
-          'CB_RFC',
-          'CB_CURP',
-          'CB_INFCRED'
-        ],
-        where: {
-          CB_CODIGO: parseInt(employeeNumber, 10)
-        },
-        logging: () => console.log(chalk.green("Successful query to employee"))
       });
 
       const businessName = await BusinessName.findOne({

@@ -84,10 +84,10 @@ const controller = {
         setAndDeletePropertyWithNewValue(employee,`CB_${config.department}`,'ZMORGTX05',departmen.getDataValue('TB_ELEMENT'));
 
         let area = areas.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue(`CB_${config.area}`));
-        setAndDeletePropertyWithNewValue(employee,`CB_${config.area}`,'AREA',area.getDataValue('TB_ELEMENT'));
+        setAndDeletePropertyWithNewValue(employee,`CB_${config.area}`,'AREA',area === undefined ? "" : area.getDataValue('TB_ELEMENT'));
 
         let subarea = subareas.find(element => element.getDataValue('PU_CODIGO') === employee.getDataValue(`CB_${config.subarea}`));
-        setAndDeletePropertyWithNewValue(employee,`CB_${config.subarea}`,'SAREA',subarea.getDataValue('PU_DESCRIP'));
+        setAndDeletePropertyWithNewValue(employee,`CB_${config.subarea}`,'SAREA',subarea === undefined ? "" : subarea.getDataValue('PU_DESCRIP'));
 
         let type = types.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue(`CB_${config.employeeType}`));
         setAndDeletePropertyWithNewValue(employee,`CB_${config.employeeType}`,'PTEXT',type ===  undefined ? "" : type.getDataValue('TB_ELEMENT'));

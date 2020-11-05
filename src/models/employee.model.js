@@ -16,6 +16,10 @@ Employee.init({
     allowNull: false,
     primaryKey: true
   },
+  CB_NOMINA: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
   CB_ACTIVO: {
     type: DataTypes.CHAR,
     allowNull: false

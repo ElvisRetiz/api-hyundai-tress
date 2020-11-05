@@ -4,6 +4,7 @@ const dayjs = require('dayjs');
 const Sequelize = require('sequelize');
 const chalk = require('chalk');
 
+const Employee = require('../models/employee.model');
 const Payroll = require('../models/payroll.model');
 const Period = require('../models/period.model');
 
@@ -19,6 +20,13 @@ const controller = {
       const { year, month, employee } = req.params;
       let payrollsOfMonth = [];
 
+      const employeeFind = await Employee.findOne({
+        where: {
+          CB_CODIGO: parseInt(employee)
+        },
+        logging: () => console.log(chalk.green("Successful query to employees"))
+      });
+
       const payrolls = await Payroll.findAll({
         attributes: [
           'PE_NUMERO',
@@ -31,7 +39,7 @@ const controller = {
           NO_TIMBRO: 2, //status timbrada
           PE_YEAR: parseInt(year,10),
           CB_CODIGO: parseInt(employee,10),
-          $and: Sequelize.literal(`PE_NUMERO in (select PE_NUMERO from PERIODO where PE_MES = ${parseInt(month,10)} and PE_YEAR = ${parseInt(year,10)})`)
+          $and: Sequelize.literal(`PE_NUMERO in (select PE_NUMERO from PERIODO where PE_MES = ${parseInt(month,10)} and PE_YEAR = ${parseInt(year,10)} and PE_TIPO = ${employeeFind.getDataValue('CB_NOMINA')})`)
         },
         logging: () => console.log(chalk.green("Successful query to payrolls"))
       });
@@ -44,7 +52,8 @@ const controller = {
         ],
         where: {
           PE_YEAR: parseInt(year,10),
-          PE_MES: parseInt(month,10)
+          PE_MES: parseInt(month,10),
+          PE_TIPO: payrolls[0].getDataValue('PE_TIPO')
         },
         logging: () => console.log(chalk.green("Successful query to periods"))
       });
@@ -56,14 +65,20 @@ const controller = {
         payrollObject.EMPLOYEEID = parseInt(employee);
         payrollObject.CCODE = config.companyCode;
         
-        let periodOfPayroll = periods.filter((period) => (
+        // let periodOfPayroll = periods.filter((period) => (
+        //   period.getDataValue('PE_TIPO') === payroll.getDataValue('PE_TIPO') 
+        //   &&
+        //   period.getDataValue('PE_NUMERO') === payroll.getDataValue('PE_NUMERO')
+        // ));
+
+        let periodOfPayroll = periods.find((period) => (
           period.getDataValue('PE_TIPO') === payroll.getDataValue('PE_TIPO') 
           &&
           period.getDataValue('PE_NUMERO') === payroll.getDataValue('PE_NUMERO')
         ));
 
         //remove id is necesary
-        let date = new Date(periodOfPayroll[0].getDataValue('PE_FEC_PAG'))
+        let date = new Date(periodOfPayroll.getDataValue('PE_FEC_PAG'))
         date.setDate(date.getDate()+1);
 
         payrollObject.PAYDAY = dayjs(date).format('DD/MM/YYYY');
