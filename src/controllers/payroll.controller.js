@@ -82,7 +82,8 @@ const controller = {
       console.error(error);
 
       return res.send({
-        message: "Something goes wrong!"
+        message: "No information was found with the specified parameters",
+        data: []
       })
       
     }
