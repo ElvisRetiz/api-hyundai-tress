@@ -22,7 +22,7 @@ const controller = {
   signupEmployee: async (req, res) => {
     try {
       
-      const { birthday, nss, rfc, curp } = req.params;
+      const { companyc, birthday, nss, rfc, curp } = req.params;
       const employeeNumber = req.params.employee;
 
       const employee = await Employee.findOne({
@@ -33,14 +33,13 @@ const controller = {
       });
 
       if(employee === null) return res.send({
-        message: "No information was found with the specified parameters",
-        data: {
-          found: "N",
-          result: "E"
-        }
+        FOUND: "N",
+        EMPLOYEE: null,
+        IF_RESULT: "E",
+        IF_MESSAGE: "The request did not return information."
       });
 
-      setAndDeleteProperty(employee,'CB_CODIGO','PERNR');
+      setAndDeletePropertyWithNewValue(employee,'CB_CODIGO','PERNR',employee.getDataValue('CB_CODIGO').toString());
       setAndDeleteDateProperty(employee,'CB_FEC_NAC','GBDAT');
       setAndDeleteProperty(employee,'CB_SEGSOC','NIMSS');
       setAndDeleteProperty(employee,'CB_RFC','NURFC');
@@ -70,11 +69,10 @@ const controller = {
       });
 
       if(department === null) return res.send({
-        message: "No information was found with the specified parameters",
-        data: {
-          found: "N",
-          result: "E"
-        }
+        FOUND: "N",
+        EMPLOYEE: null,
+        IF_RESULT: "E",
+        IF_MESSAGE: "The request did not return information."
       });
 
       setAndDeletePropertyWithNewValue(employee,`CB_${config.department}`,'ZMORGTX05',department.getDataValue('TB_ELEMENT'));
@@ -90,11 +88,10 @@ const controller = {
       });
 
       if(area === null) return res.send({
-        message: "No information was found with the specified parameters",
-        data: {
-          found: "N",
-          result: "E"
-        }
+        FOUND: "N",
+        EMPLOYEE: null,
+        IF_RESULT: "E",
+        IF_MESSAGE: "The request did not return information."
       });
 
       setAndDeletePropertyWithNewValue(employee,`CB_${config.area}`,'AREA',area.getDataValue('TB_ELEMENT'));
@@ -110,11 +107,10 @@ const controller = {
       });
 
       if(subarea === null) return res.send({
-        message: "No information was found with the specified parameters",
-        data: {
-          found: "N",
-          result: "E"
-        }
+        FOUND: "N",
+        EMPLOYEE: null,
+        IF_RESULT: "E",
+        IF_MESSAGE: "The request did not return information."
       });
 
       setAndDeletePropertyWithNewValue(employee,`CB_${config.subarea}`,'SAREA',subarea.getDataValue('PU_DESCRIP'));
@@ -129,7 +125,7 @@ const controller = {
         logging: () => console.log(chalk.green("Successful query to type"))
       });
 
-      setAndDeletePropertyWithNewValue(employee,`CB_${config.employeeType}`,'PTEXT',type === null ? "" : type.getDataValue('TB_ELEMENT'));
+      setAndDeletePropertyWithNewValue(employee,`CB_${config.employeeType}`,'PTEXT',type === null ? null : type.getDataValue('TB_ELEMENT'));
 
       let photo = await Photo.findOne({
         where: {
@@ -139,27 +135,32 @@ const controller = {
         logging: () => console.log(chalk.green("Successful query to photos"))
       });
 
-      employee.setDataValue('PHOTO64', photo === null ? "" : encode(photo.getDataValue('IM_BLOB')));
+      employee.setDataValue('PHOTO64', photo === null ? null : encode(photo.getDataValue('IM_BLOB')));
       employee.setDataValue('FOUND', 'Y');
       employee.setDataValue('RESULT', 'S');
 
+      delete employee.dataValues.CB_NOMINA;
       delete employee.dataValues.CB_ACTIVO;
       delete employee.dataValues.CB_FEC_ANT;
       delete employee.dataValues.CB_FEC_ING;
       delete employee.dataValues.CB_INFCRED;
 
-      return res.send(employee);
+      return res.send({
+        FOUND: "Y",
+        EMPLOYEE: employee,
+        IF_RESULT: "S",
+        IF_MESSAGE: ""
+      });
 
     } catch (error) {
 
       console.error(error);
 
       return res.send({
-        message: "No information was found with the specified parameters",
-        data: {
-          found: "N",
-          result: "E"
-        }
+        FOUND: "N",
+        EMPLOYEE: null,
+        IF_RESULT: "E",
+        IF_MESSAGE: "The request did not return information."
       })
       
     }

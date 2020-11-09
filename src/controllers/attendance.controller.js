@@ -30,8 +30,9 @@ const controller = {
 
       if (days.length === 0) {
         return res.send({
-          message: "No information was found with the specified parameters",
-          data: []
+          ATTENDANCEList: [],
+          IF_RESULT: "E",
+          IF_MESSAGE: "No information was found with the specified parameters."
         })
       };
 
@@ -46,8 +47,9 @@ const controller = {
 
       if (records.length === 0) {
         return res.send({
-          message: "No information was found with the specified parameters",
-          data: []
+          ATTENDANCEList: [],
+          IF_RESULT: "E",
+          IF_MESSAGE: "No information was found with the specified parameters."
         })
       };
 
@@ -60,7 +62,7 @@ const controller = {
         let dayObject = {};
 
         dayObject.CCODE = config.companyCode;
-        dayObject.EMPLOYEEID = parseInt(employee,10);
+        dayObject.PERNR = `${employee}`;
 
         //remove if is necesary
         let date = new Date(day.getDataValue('AU_FECHA'))
@@ -95,15 +97,20 @@ const controller = {
 
       }
 
-      return res.send(attendance);
+      return res.send({
+        ATTENDANCEList: attendance,
+        IF_RESULT: "S",
+        IF_MESSAGE: ""
+      });
 
     } catch (error) {
 
       console.error(error);
 
       return res.send({
-        message: "No information was found with the specified parameters",
-        data: []
+        ATTENDANCEList: [],
+        IF_RESULT: "E",
+        IF_MESSAGE: "No information was found with the specified parameters."
       });
       
     }

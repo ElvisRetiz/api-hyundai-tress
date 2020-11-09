@@ -3,6 +3,6 @@ const controller = require("../controllers/payroll.controller");
 
 const router = express.Router();
 
-router.get("/year=:year&month=:month&employee=:employee",controller.getPayrollsByMonth);
+router.get("/CCODE=:companyc&YEAR=:year&PERIOD=:month&PERNR=:employee",controller.getPayrollsByMonth);
 
 module.exports = router;

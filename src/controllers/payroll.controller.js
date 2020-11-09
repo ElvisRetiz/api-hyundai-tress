@@ -62,14 +62,8 @@ const controller = {
 
         let payrollObject = {};
 
-        payrollObject.EMPLOYEEID = parseInt(employee);
+        payrollObject.PERNR = `${employee}`;
         payrollObject.CCODE = config.companyCode;
-        
-        // let periodOfPayroll = periods.filter((period) => (
-        //   period.getDataValue('PE_TIPO') === payroll.getDataValue('PE_TIPO') 
-        //   &&
-        //   period.getDataValue('PE_NUMERO') === payroll.getDataValue('PE_NUMERO')
-        // ));
 
         let periodOfPayroll = periods.find((period) => (
           period.getDataValue('PE_TIPO') === payroll.getDataValue('PE_TIPO') 
@@ -90,15 +84,20 @@ const controller = {
 
       }
       
-      return res.send(payrollsOfMonth);
+      return res.send({
+        PAYMENTList: payrollsOfMonth,
+        IF_RESULT: "S",
+        IF_MESSAGE: ""
+      });
 
     } catch (error) {
 
       console.error(error);
 
       return res.send({
-        message: "No information was found with the specified parameters",
-        data: []
+        PAYMENTList: [],
+        IF_RESULT: "E",
+        IF_MESSAGE: "No information was found with the specified parameters."
       })
       
     }

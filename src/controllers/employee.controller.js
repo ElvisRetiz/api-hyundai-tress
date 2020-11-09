@@ -67,9 +67,7 @@ const controller = {
       });
 
       employees.forEach((employee, index) => {
-        employee.setDataValue('CCODE', config.companyCode);
-        
-        setAndDeleteProperty(employee,'CB_CODIGO','PERNR');
+        setAndDeletePropertyWithNewValue(employee,'CB_CODIGO','PERNR',employee.getDataValue('CB_CODIGO').toString());
         setAndDeleteDateProperty(employee,'CB_FEC_NAC','GBDAT');
         setAndDeleteProperty(employee,'CB_SEGSOC','NIMSS');
         setAndDeleteProperty(employee,'CB_RFC','NURFC');
@@ -84,35 +82,43 @@ const controller = {
         setAndDeletePropertyWithNewValue(employee,`CB_${config.department}`,'ZMORGTX05',departmen.getDataValue('TB_ELEMENT'));
 
         let area = areas.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue(`CB_${config.area}`));
-        setAndDeletePropertyWithNewValue(employee,`CB_${config.area}`,'AREA',area === undefined ? "" : area.getDataValue('TB_ELEMENT'));
+        setAndDeletePropertyWithNewValue(employee,`CB_${config.area}`,'AREA',area === undefined ? null : area.getDataValue('TB_ELEMENT'));
 
         let subarea = subareas.find(element => element.getDataValue('PU_CODIGO') === employee.getDataValue(`CB_${config.subarea}`));
-        setAndDeletePropertyWithNewValue(employee,`CB_${config.subarea}`,'SAREA',subarea === undefined ? "" : subarea.getDataValue('PU_DESCRIP'));
+        setAndDeletePropertyWithNewValue(employee,`CB_${config.subarea}`,'SAREA',subarea === undefined ? null : subarea.getDataValue('PU_DESCRIP'));
 
         let type = types.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue(`CB_${config.employeeType}`));
-        setAndDeletePropertyWithNewValue(employee,`CB_${config.employeeType}`,'PTEXT',type ===  undefined ? "" : type.getDataValue('TB_ELEMENT'));
+        setAndDeletePropertyWithNewValue(employee,`CB_${config.employeeType}`,'PTEXT',type ===  undefined ? null : type.getDataValue('TB_ELEMENT'));
 
         let photo = photos.find(element => element.getDataValue('CB_CODIGO') === employee.getDataValue('PERNR'));
-        employee.setDataValue('PHOTO64', photo === undefined ? "" : encode(photo.getDataValue('IM_BLOB')));
+        employee.setDataValue('PHOTO64', photo === undefined ? null : encode(photo.getDataValue('IM_BLOB')));
 
         employee.setDataValue('EXEC', dayjs().format('DD/MM/YYYY'));
         employee.setDataValue('INDEX', index+1);
 
+        delete employee.dataValues.CB_NOMINA;
         delete employee.dataValues.CB_ACTIVO;
         delete employee.dataValues.CB_FEC_ANT;
         delete employee.dataValues.CB_FEC_ING;
         delete employee.dataValues.CB_INFCRED;
       });
 
-      return res.send(employees);
+      return res.send({
+        CCODE: config.companyCode,
+        ACTIVEEMPLOYEEList: employees,
+        IF_RESULT: "S",
+        IF_MESSAGE: ""
+      });
 
     } catch (error) {
 
       console.error(error);
 
       return res.send({
-        message: "The request did not return information.",
-        data: []
+        CCODE: config.companyCode,
+        ACTIVEEMPLOYEEList: [],
+        IF_RESULT: "E",
+        IF_MESSAGE: "The request did not return information."
       });
       
     }
