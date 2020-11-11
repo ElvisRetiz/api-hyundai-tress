@@ -5,7 +5,7 @@ const sequelize = require('../db/index');
 
 const controller = {
   getAllRoutes: async (req, res) => {
-    const htmlDocument = fs.readFileSync(path.join(__dirname,'../','assets/html/index.html'), { encoding: 'utf-8'});
+    const htmlDocument = fs.readFileSync(path.resolve(process.cwd(),'assets/html/index.html'), { encoding: 'utf-8'});
     res.send(htmlDocument);
   },
   tasteDB: async (req, res) => {

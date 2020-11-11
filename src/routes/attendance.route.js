@@ -3,6 +3,6 @@ const controller = require("../controllers/attendance.controller");
 
 const router = express.Router();
 
-router.get("/year=:year&month=:month&employee=:employee",controller.getAttendanceByMonth);
+router.get("/CCODE=:companyc&YEAR=:year&PERIOD=:month&PERNR=:employee",controller.getAttendanceByMonth);
 
 module.exports = router;  
