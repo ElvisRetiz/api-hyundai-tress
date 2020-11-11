@@ -170,7 +170,7 @@
   <script async>
     const output = document.getElementById('output');
     const outputText = document.getElementById('output-text');
-    fetch('http://localhost:5060/api/test')
+    fetch(window.location.origin+'/api/test')
       .then(async response => {
         let data = await response.json()
         if (data.type === "succes") {

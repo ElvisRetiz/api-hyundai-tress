@@ -90,7 +90,7 @@ const controller = {
         let type = types.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue(`CB_${config.employeeType}`));
         setAndDeletePropertyWithNewValue(employee,`CB_${config.employeeType}`,'PTEXT',type ===  undefined ? null : type.getDataValue('TB_ELEMENT'));
 
-        let photo = photos.find(element => element.getDataValue('CB_CODIGO') === employee.getDataValue('PERNR'));
+        let photo = photos.find(element => element.getDataValue('CB_CODIGO') == employee.getDataValue('PERNR'));
         employee.setDataValue('PHOTO64', photo === undefined ? null : encode(photo.getDataValue('IM_BLOB')));
 
         employee.setDataValue('EXEC', dayjs().format('DD/MM/YYYY'));
