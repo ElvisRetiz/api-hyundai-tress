@@ -4,104 +4,50 @@ const dayjs = require('dayjs');
 const chalk = require('chalk');
 const { encode } = require('base64-arraybuffer');
 
-const { arrayToObject, setAndDeleteProperty, setAndDeleteDateProperty, setAndDeletePropertyWithNewValue } = require('../helpers/configObjectHandler');
-const { format } = require('../helpers/stringsHandler');
-
-
-const Employee = require('../models/employee.model');
-const Department = require('../models/department.model');
-const Area = require('../models/area.model');
-const Subarea = require('../models/subarea.model');
-const Type = require('../models/type.model');
-const BusinessName = require('../models/business-name.model');
-const Company = require('../models/company.model');
-const Photo = require('../models/photo.model');
+const { arrayToObject } = require('../helpers/configObjectHandler');
 
 let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const config = arrayToObject(configArray);
+
+const sequelize = require('../db/index');
 
 const controller = {
   getAllEmployees: async (req, res) => {
     try {
 
-      const employees = await Employee.findAll({
-        where: {
-          CB_ACTIVO: 'S'
-        },
-        logging: () => console.log(chalk.green("Successful query to employees"))
+      const result = await sequelize.query(`
+      select 
+        PERNR=CAST(C.cb_codigo AS varchar),
+        GBDAT=FORMAT(C.cb_fec_nac,'d','en-gb'),
+        NIMSS=C.cb_segsoc,
+        NURFC=C.cb_rfc,
+        NCURP=C.cb_curp,
+        ENAME=C.prettyname,
+        BTEXT=RS.RS_CIUDAD,
+        ZMORGTX05=N2.TB_ELEMENT,
+        AREA=N3.TB_ELEMENT,
+        SUBAERA=PU.PU_DESCRIP,
+        PTEXT=N0.TB_ELEMENT,
+        PHOTO64=IM_BLOB
+      from COLABORA C
+      Left Join RPATRON RP on C.CB_PATRON=RP.TB_CODIGO
+      Left Join RSOCIAL RS on RP.RS_CODIGO=RS.RS_CODIGO
+      Left Join NIVEL2 N2 on C.CB_NIVEL2=N2.TB_CODIGO
+      Left Join NIVEL3 N3 on C.CB_NIVEL3=N3.TB_CODIGO
+      Left Join PUESTO PU on C.CB_PUESTO=PU.PU_CODIGO
+      Left Join COMPARTE.dbo.NIVEL0 N0 on C.CB_NIVEL0=N0.TB_CODIGO
+      Left Join IMAGEN I on C.CB_CODIGO=I.CB_CODIGO and I.IM_TIPO = 'FOTO'
+      where C.CB_ACTIVO='S'
+      `, {
+        logging: () => console.log(chalk.green('Successful query to employees'))
       });
 
-      const businessNames = await BusinessName.findAll({
-        logging: () => console.log(chalk.green("Successful query to buisiness name"))
-      });
+      const employees = result[0];
 
-      const companies = await Company.findAll({
-        logging: () => console.log(chalk.green("Successful query to company"))
-      });
-
-      let departments = await Department.findAll({
-        logging: () => console.log(chalk.green("Successful query to departmens"))
-      });
-
-      let areas = await Area.findAll({
-        logging: () => console.log(chalk.green("Successful query to areas"))
-      });
-
-      let subareas = await Subarea.findAll({
-        logging: () => console.log(chalk.green("Successful query to subareas"))
-      });
-
-      let types = await Type.findAll({
-        logging: () => console.log(chalk.green("Successful query to types"))
-      });
-
-      const photos = await Photo.findAll({
-        attributes: [
-          'CB_CODIGO',
-          'IM_BLOB'
-        ],
-        where: {
-          IM_TIPO: "FOTO"
-        },
-        logging: () => console.log(chalk.green("Successful query to photos"))
-      });
-
-      employees.forEach((employee, index) => {
-        setAndDeletePropertyWithNewValue(employee,'CB_CODIGO','PERNR',employee.getDataValue('CB_CODIGO').toString());
-        setAndDeleteDateProperty(employee,'CB_FEC_NAC','GBDAT');
-        setAndDeleteProperty(employee,'CB_SEGSOC','NIMSS');
-        setAndDeleteProperty(employee,'CB_RFC','NURFC');
-        setAndDeleteProperty(employee,'CB_CURP','NCURP');
-        setAndDeletePropertyWithNewValue(employee,'PRETTYNAME','ENAME',format(employee.getDataValue('PRETTYNAME')));
-
-        let businessName = businessNames.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue('CB_PATRON'));
-        let company = companies.find(element => element.getDataValue('RS_CODIGO') === businessName.getDataValue('RS_CODIGO'));
-        setAndDeletePropertyWithNewValue(employee,'CB_PATRON','BTEXT',company.getDataValue('RS_CIUDAD'));
-        
-        let departmen = departments.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue(`CB_${config.department}`));
-        setAndDeletePropertyWithNewValue(employee,`CB_${config.department}`,'ZMORGTX05',departmen.getDataValue('TB_ELEMENT'));
-
-        let area = areas.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue(`CB_${config.area}`));
-        setAndDeletePropertyWithNewValue(employee,`CB_${config.area}`,'AREA',area === undefined ? null : area.getDataValue('TB_ELEMENT'));
-
-        let subarea = subareas.find(element => element.getDataValue('PU_CODIGO') === employee.getDataValue(`CB_${config.subarea}`));
-        setAndDeletePropertyWithNewValue(employee,`CB_${config.subarea}`,'SAREA',subarea === undefined ? null : subarea.getDataValue('PU_DESCRIP'));
-
-        let type = types.find(element => element.getDataValue('TB_CODIGO') === employee.getDataValue(`CB_${config.employeeType}`));
-        setAndDeletePropertyWithNewValue(employee,`CB_${config.employeeType}`,'PTEXT',type ===  undefined ? null : type.getDataValue('TB_ELEMENT'));
-
-        let photo = photos.find(element => element.getDataValue('CB_CODIGO') == employee.getDataValue('PERNR'));
-        employee.setDataValue('PHOTO64', photo === undefined ? null : encode(photo.getDataValue('IM_BLOB')));
-
-        employee.setDataValue('EXEC', dayjs().format('DD/MM/YYYY'));
-        employee.setDataValue('INDEX', index+1);
-
-        delete employee.dataValues.CB_NOMINA;
-        delete employee.dataValues.CB_ACTIVO;
-        delete employee.dataValues.CB_FEC_ANT;
-        delete employee.dataValues.CB_FEC_ING;
-        delete employee.dataValues.CB_INFCRED;
-      });
+      for (let i = 0; i < employees.length; i++) {
+        let photo = encode(employees[i].PHOTO64);
+        employees[i].PHOTO64 = photo === "" ? null : photo;
+      }
 
       return res.send({
         CCODE: config.companyCode,
@@ -127,6 +73,9 @@ const controller = {
 
     try {
 
+      const Employee = require('../models/employee.model');
+      const Photo = require('../models/photo.model');
+
       let employeesPhotos = [];
 
       const employees = await Employee.findAll({
@@ -149,7 +98,8 @@ const controller = {
         where: {
           IM_TIPO: "FOTO",
           CB_CODIGO: employeesNumber
-        }
+        },
+        logging: () => console.log(chalk.green("Successful query to photos"))
       });
 
       for (const photo of photos) {
