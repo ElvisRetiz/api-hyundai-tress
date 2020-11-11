@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../db/db.comparte');
+const sequelize = require('../db/index');
 
 const { arrayToObject } = require('../helpers/configObjectHandler');
 
