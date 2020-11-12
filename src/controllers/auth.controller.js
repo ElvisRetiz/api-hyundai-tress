@@ -75,8 +75,6 @@ const controller = {
         IF_MESSAGE: "The request did not return information."
       });
 
-      setAndDeletePropertyWithNewValue(employee,`CB_${config.department}`,'ZMORGTX05',department.getDataValue('TB_ELEMENT'));
-
       let area = await Area.findOne({
         attributes: [
           'TB_ELEMENT'
@@ -94,7 +92,8 @@ const controller = {
         IF_MESSAGE: "The request did not return information."
       });
 
-      setAndDeletePropertyWithNewValue(employee,`CB_${config.area}`,'AREA',area.getDataValue('TB_ELEMENT'));
+      employee.setDataValue('AREA',area.getDataValue('TB_ELEMENT'));
+      setAndDeletePropertyWithNewValue(employee,`CB_${config.department}`,'ZMORGTX05',department.getDataValue('TB_ELEMENT'));
 
       let subarea = await Subarea.findOne({
         attributes: [

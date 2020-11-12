@@ -57,6 +57,8 @@ const controller = {
         logging: () => console.log(chalk.green("Successful query to incidence"))
       });
 
+      console.log("INCIDENCES: ", incidences);
+
       for (const day of days) {
 
         let dayObject = {};
@@ -85,7 +87,7 @@ const controller = {
         if (!dayObject.hasOwnProperty('CHECKOUT')) dayObject.CHECKOUT = ""
 
         if (day.getDataValue('AU_TIPO') !== "   ") {
-          let incidence = incidences.filter(inc => inc.getDataValue('TB_CODIGO') === day.getDataValue('AU_TIPO'));
+          let incidence = incidences.filter(inc => inc.getDataValue('TB_CODIGO') === (day.getDataValue('AU_TIPO') === "VAC" ? "V  " : day.getDataValue('AU_TIPO')));
           dayObject.DESCRIPTION = incidence[0].TB_ELEMENT;
           dayObject.DESCRIPTIONEN = incidence[0].TB_INGLES;
         }else {
