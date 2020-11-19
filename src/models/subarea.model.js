@@ -11,16 +11,16 @@ const config = arrayToObject(configArray);
 class Subarea extends Model {}
 
 Subarea.init({
-  PU_CODIGO: {
+  TB_CODIGO: {
     type: DataTypes.CHAR,
     allowNull: false,
     primaryKey: true
   },
-  PU_DESCRIP: {
+  TB_ELEMENT: {
     type: DataTypes.CHAR,
     allowNull: false
   },
-  PU_INGLES: {
+  TB_INGLES: {
     type: DataTypes.CHAR,
     allowNull: false
   }

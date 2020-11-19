@@ -23,17 +23,18 @@ const controller = {
         NCURP=C.cb_curp,
         ENAME=C.prettyname,
         BTEXT=RS.RS_CIUDAD,
-        ZMORGTX05=N3.TB_ELEMENT,
+        ZMORGTX05=N2.TB_ELEMENT,
         AREA=N3.TB_ELEMENT,
-        SUBAERA=PU.PU_DESCRIP,
-        PTEXT=N7.TB_ELEMENT,
+        SUBAERA=N4.TB_ELEMENT,
+        PTEXT=E1.TB_ELEMENT,
         PHOTO64=IM_BLOB
       from COLABORA C
       Left Join RPATRON RP on C.CB_PATRON=RP.TB_CODIGO
       Left Join RSOCIAL RS on RP.RS_CODIGO=RS.RS_CODIGO
-      Left Join NIVEL3 N3 on C.CB_NIVEL3=N3.TB_CODIGO
-      Left Join PUESTO PU on C.CB_PUESTO=PU.PU_CODIGO
-      Left Join NIVEL7 N7 on C.CB_NIVEL7=N7.TB_CODIGO
+      Left Join NIVEL2 N2 on C.CB_NIVEL2=N2.TB_CODIGO
+	    Left Join NIVEL3 N3 on C.CB_NIVEL3=N3.TB_CODIGO
+      Left Join NIVEL4 N4 on C.CB_NIVEL4=N4.TB_CODIGO
+      Left Join EXTRA1 E1 on C.CB_G_TAB_1=E1.TB_CODIGO
       Left Join IMAGEN I on C.CB_CODIGO=I.CB_CODIGO and I.IM_TIPO = 'FOTO'
       where C.CB_ACTIVO='S'
       `, {

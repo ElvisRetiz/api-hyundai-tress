@@ -97,10 +97,10 @@ const controller = {
 
       let subarea = await Subarea.findOne({
         attributes: [
-          'PU_DESCRIP'
+          'TB_ELEMENT'
         ],
         where: {
-          PU_CODIGO: employee.getDataValue(`CB_${config.subarea}`)
+          TB_CODIGO: employee.getDataValue(`CB_${config.subarea}`)
         },
         logging: () => console.log(chalk.green("Successful query to subarea"))
       });

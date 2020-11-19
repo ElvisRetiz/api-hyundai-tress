@@ -23,7 +23,7 @@ Type.init({
 },{
   sequelize,
   modelName: 'Type',
-  tableName: `${config.employeeType}`,
+  tableName: `EXTRA1`,
   timestamps: false
 });
 
