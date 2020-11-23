@@ -5,7 +5,7 @@ const sequelize = require('../db/index');
 
 const { arrayToObject } = require('../helpers/configObjectHandler');
 
-let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const config = arrayToObject(configArray);
 
 class Type extends Model {}
@@ -19,15 +19,11 @@ Type.init({
   TB_ELEMENT: {
     type: DataTypes.CHAR,
     allowNull: false
-  },
-  TB_INGLES: {
-    type: DataTypes.CHAR,
-    allowNull: false
   }
 },{
   sequelize,
   modelName: 'Type',
-  tableName: `${config.employeeType}`,
+  tableName: `EXTRA1`,
   timestamps: false
 });
 

@@ -5,7 +5,7 @@ const sequelize = require('../db/index');
 
 const { arrayToObject } = require('../helpers/configObjectHandler');
 
-let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const { costCenter } = arrayToObject(configArray);
 
 class Payroll extends Model {}
