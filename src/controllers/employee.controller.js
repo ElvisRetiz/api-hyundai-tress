@@ -27,26 +27,20 @@ const controller = {
         AREA=N3.TB_ELEMENT,
         SUBAERA=N4.TB_ELEMENT,
         PTEXT=E1.TB_ELEMENT,
-        PHOTO64=IM_BLOB
+        PHOTO64=(select IM_BLOB as '*' from IMAGEN where CB_CODIGO = C.CB_CODIGO and IM_TIPO = 'FOTO' for xml path(''))
       from COLABORA C
       Left Join RPATRON RP on C.CB_PATRON=RP.TB_CODIGO
       Left Join RSOCIAL RS on RP.RS_CODIGO=RS.RS_CODIGO
       Left Join NIVEL2 N2 on C.CB_NIVEL2=N2.TB_CODIGO
-	    Left Join NIVEL3 N3 on C.CB_NIVEL3=N3.TB_CODIGO
+      Left Join NIVEL3 N3 on C.CB_NIVEL3=N3.TB_CODIGO
       Left Join NIVEL4 N4 on C.CB_NIVEL4=N4.TB_CODIGO
       Left Join EXTRA1 E1 on C.CB_G_TAB_1=E1.TB_CODIGO
-      Left Join IMAGEN I on C.CB_CODIGO=I.CB_CODIGO and I.IM_TIPO = 'FOTO'
       where C.CB_ACTIVO='S'
       `, {
         logging: () => console.log(chalk.green('Successful query to employees'))
       });
 
-      const employees = result[0];
-
-      for (let i = 0; i < employees.length; i++) {
-        let photo = encode(employees[i].PHOTO64);
-        employees[i].PHOTO64 = photo === "" ? null : photo;
-      }
+      let employees = result[0];
 
       return res.send({
         CCODE: config.companyCode,

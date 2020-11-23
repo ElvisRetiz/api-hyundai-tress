@@ -9,10 +9,7 @@ let { dbUser, dbPassword, dbServer, dbName } = arrayToObject(configArray);
 
 const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   host: dbServer,
-  dialect: 'mssql',
-  dialectOptions: {
-    options: {encrypt: false}
-  }
+  dialect: 'mssql'
 });
 
 module.exports = sequelize;

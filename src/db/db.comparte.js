@@ -9,10 +9,7 @@ let { dbUser, dbPassword, dbServer, dbComparte } = arrayToObject(configArray);
 
 const sequelize = new Sequelize(dbComparte, dbUser, dbPassword, {
   host: dbServer,
-  dialect: 'mssql',
-  dialectOptions: {
-    options: {encrypt: false}
-  }
+  dialect: 'mssql'
 });
 
 module.exports = sequelize;

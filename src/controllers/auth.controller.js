@@ -92,7 +92,7 @@ const controller = {
         IF_MESSAGE: "The request did not return information."
       });
 
-      employee.setDataValue('AREA',area.getDataValue('TB_ELEMENT'));
+      setAndDeletePropertyWithNewValue(employee,`CB_${config.area}`,'AREA',area.getDataValue('TB_ELEMENT'));
       setAndDeletePropertyWithNewValue(employee,`CB_${config.department}`,'ZMORGTX05',department.getDataValue('TB_ELEMENT'));
 
       let subarea = await Subarea.findOne({
@@ -112,7 +112,7 @@ const controller = {
         IF_MESSAGE: "The request did not return information."
       });
 
-      setAndDeletePropertyWithNewValue(employee,`CB_${config.subarea}`,'SAREA',subarea.getDataValue('PU_DESCRIP'));
+      setAndDeletePropertyWithNewValue(employee,`CB_${config.subarea}`,'SAREA',subarea.getDataValue('TB_ELEMENT'));
 
       let type = await Type.findOne({
         attributes: [
