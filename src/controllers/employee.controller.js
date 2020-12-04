@@ -28,7 +28,7 @@ const controller = {
         AREA=N3.TB_ELEMENT,
         SUBAERA=PU.PU_DESCRIP,
         PTEXT=N0.TB_ELEMENT,
-        PHOTO64=IM_BLOB
+        PHOTO64=(select IM_BLOB as '*' from IMAGEN where CB_CODIGO = C.CB_CODIGO and IM_TIPO = 'FOTO' for xml path(''))
       from COLABORA C
       Left Join RPATRON RP on C.CB_PATRON=RP.TB_CODIGO
       Left Join RSOCIAL RS on RP.RS_CODIGO=RS.RS_CODIGO
@@ -36,18 +36,12 @@ const controller = {
       Left Join NIVEL3 N3 on C.CB_NIVEL3=N3.TB_CODIGO
       Left Join PUESTO PU on C.CB_PUESTO=PU.PU_CODIGO
       Left Join COMPARTE.dbo.NIVEL0 N0 on C.CB_NIVEL0=N0.TB_CODIGO
-      Left Join IMAGEN I on C.CB_CODIGO=I.CB_CODIGO and I.IM_TIPO = 'FOTO'
       where C.CB_ACTIVO='S'
       `, {
         logging: () => console.log(chalk.green('Successful query to employees'))
       });
 
-      const employees = result[0];
-
-      for (let i = 0; i < employees.length; i++) {
-        let photo = encode(employees[i].PHOTO64);
-        employees[i].PHOTO64 = photo === "" ? null : photo;
-      }
+      let employees = result[0];
 
       return res.send({
         CCODE: config.companyCode,
@@ -73,44 +67,25 @@ const controller = {
 
     try {
 
-      const Employee = require('../models/employee.model');
-      const Photo = require('../models/photo.model');
-
       let employeesPhotos = [];
 
-      const employees = await Employee.findAll({
-        where: {
-          CB_ACTIVO: 'S'
-        },
-        attributes:[
-          'CB_CODIGO'
-        ],
-        logging: () => console.log(chalk.green("Successful query to employees"))
+      const result = await sequelize.query(`
+        select 
+          PERNR=CAST(CB_CODIGO AS varchar),
+          PHOTO64=(select IM_BLOB as '*' from IMAGEN where CB_CODIGO = COLABORA.CB_CODIGO and IM_TIPO = 'FOTO' for xml path(''))
+          from COLABORA
+        where CB_ACTIVO='S'
+      `,{
+        logging: () => console.log(chalk.green('Successful query to photos'))
       });
 
-      const employeesNumber = employees.map( emp => emp.getDataValue('CB_CODIGO'));
+      const photos = result[0];
 
-      const photos = await Photo.findAll({
-        attributes: [
-          'CB_CODIGO',
-          'IM_BLOB'
-        ],
-        where: {
-          IM_TIPO: "FOTO",
-          CB_CODIGO: employeesNumber
-        },
-        logging: () => console.log(chalk.green("Successful query to photos"))
+      photos.forEach(photo => {
+        photo.CCODE = config.companyCode;
       });
 
-      for (const photo of photos) {
-        let employeesObject = {};
-        employeesObject.CCODE = config.companyCode;
-        employeesObject.EMPLOYEEID = photo.getDataValue('CB_CODIGO');
-        employeesObject.PHOTO = encode(photo.getDataValue('IM_BLOB'));
-        employeesPhotos.push(employeesObject);
-      }
-
-      return res.send(employeesPhotos);
+      return res.send(photos);
 
     } catch (error) {
 
