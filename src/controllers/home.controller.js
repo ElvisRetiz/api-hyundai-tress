@@ -20,6 +20,11 @@ const controller = {
       res.send({type: "fail"});
       
     }
+  },
+  getStatus: (req, res) => {
+    res.send({
+      message: "alive"
+    })
   }
 };
 

@@ -65,45 +65,25 @@ const controller = {
   getAllPhotos: async (req, res) => {
 
     try {
-
-      const Employee = require('../models/employee.model');
-      const Photo = require('../models/photo.model');
-
       let employeesPhotos = [];
 
-      const employees = await Employee.findAll({
-        where: {
-          CB_ACTIVO: 'S'
-        },
-        attributes:[
-          'CB_CODIGO'
-        ],
-        logging: () => console.log(chalk.green("Successful query to employees"))
+      const result = await sequelize.query(`
+        select 
+          PERNR=CAST(CB_CODIGO AS varchar),
+          PHOTO64=(select IM_BLOB as '*' from IMAGEN where CB_CODIGO = COLABORA.CB_CODIGO and IM_TIPO = 'FOTO' for xml path(''))
+          from COLABORA
+        where CB_ACTIVO='S'
+      `,{
+        logging: () => console.log(chalk.green('Successful query to photos'))
       });
 
-      const employeesNumber = employees.map( emp => emp.getDataValue('CB_CODIGO'));
+      const photos = result[0];
 
-      const photos = await Photo.findAll({
-        attributes: [
-          'CB_CODIGO',
-          'IM_BLOB'
-        ],
-        where: {
-          IM_TIPO: "FOTO",
-          CB_CODIGO: employeesNumber
-        },
-        logging: () => console.log(chalk.green("Successful query to photos"))
+      photos.forEach(photo => {
+        photo.CCODE = config.companyCode;
       });
 
-      for (const photo of photos) {
-        let employeesObject = {};
-        employeesObject.CCODE = config.companyCode;
-        employeesObject.EMPLOYEEID = photo.getDataValue('CB_CODIGO');
-        employeesObject.PHOTO = encode(photo.getDataValue('IM_BLOB'));
-        employeesPhotos.push(employeesObject);
-      }
-
-      return res.send(employeesPhotos);
+      return res.send(photos);
 
     } catch (error) {
 
