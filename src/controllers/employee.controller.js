@@ -65,14 +65,14 @@ const controller = {
 
     try {
 
-      let employeesPhotos = [];
+      const { employee } = req.params;
 
       const result = await sequelize.query(`
         select 
           PERNR=CAST(CB_CODIGO AS varchar),
           PHOTO64=(select IM_BLOB as '*' from IMAGEN where CB_CODIGO = COLABORA.CB_CODIGO and IM_TIPO = 'FOTO' for xml path(''))
           from COLABORA
-        where CB_ACTIVO='S'
+        where CB_CODIGO = ${parseInt(employee)}
       `,{
         logging: () => console.log(chalk.green('Successful query to photos'))
       });

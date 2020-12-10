@@ -125,16 +125,7 @@ const controller = {
       });
 
       setAndDeletePropertyWithNewValue(employee,`CB_${config.employeeType}`,'PTEXT',type === null ? null : type.getDataValue('TB_ELEMENT'));
-
-      let photo = await Photo.findOne({
-        where: {
-          IM_TIPO: "FOTO",
-          CB_CODIGO: employeeNumber
-        },
-        logging: () => console.log(chalk.green("Successful query to photos"))
-      });
-
-      employee.setDataValue('PHOTO64', photo === null ? null : encode(photo.getDataValue('IM_BLOB')));
+      
       employee.setDataValue('FOUND', 'Y');
       employee.setDataValue('RESULT', 'S');
 
