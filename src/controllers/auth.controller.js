@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
-const { encode } = require('base64-arraybuffer');
+const dayjs = require('dayjs');
 
 const { arrayToObject, setAndDeletePropertyWithNewValue, setAndDeleteProperty, setAndDeleteDateProperty } = require('../helpers/configObjectHandler');
 const { format } = require('../helpers/stringsHandler');
@@ -38,6 +38,33 @@ const controller = {
         IF_RESULT: "E",
         IF_MESSAGE: "The request did not return information."
       });
+
+      if (birthday !== undefined) {
+        let bday = birthday.split('-').reverse().toString().replace(/,/g,'');
+        let date = new Date(employee.getDataValue('CB_FEC_NAC'))
+        date.setDate(date.getDate()+1);
+        if (bday !== dayjs(date).format('YYYYMMDD')) {
+          throw new Error();
+        }
+      };
+
+      if (nss !== undefined) {
+        if (nss !== employee.getDataValue('CB_SEGSOC')) {
+          throw new Error();
+        }
+      };
+
+      if (rfc !== undefined) {
+        if (rfc !== employee.getDataValue('CB_RFC')) {
+          throw new Error();
+        }
+      };
+
+      if (curp !== undefined) {
+        if (curp !== employee.getDataValue('CB_CURP')) {
+          throw new Error();
+        }
+      };
 
       setAndDeletePropertyWithNewValue(employee,'CB_CODIGO','PERNR',employee.getDataValue('CB_CODIGO').toString());
       setAndDeleteDateProperty(employee,'CB_FEC_NAC','GBDAT');
