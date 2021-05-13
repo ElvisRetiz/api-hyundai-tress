@@ -7,7 +7,7 @@ const chalk = require('chalk');
 
 const { arrayToObject } = require('../helpers/configObjectHandler')
 
-let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const config = arrayToObject(configArray);
 
 const PortableDocumentFormat = require('../helpers/PortableDocumentFormat');
@@ -41,9 +41,28 @@ const controller = {
         date = `${year}${month}${day}`;
       }
 
+      const employee = await Employee.findOne({
+        attributes: [
+          'PRETTYNAME',
+          'CB_PATRON',
+          'CB_FEC_ANT',
+          'CB_FEC_ING',
+          'CB_SEGSOC',
+          'CB_RFC',
+          'CB_CURP',
+          'CB_INFCRED',
+          'CB_NOMINA'
+        ],
+        where: {
+          CB_CODIGO: parseInt(employeeNumber, 10)
+        },
+        logging: () => console.log(chalk.green("Successful query to employee"))
+      });
+
       const period = await Period.findOne({
         where: {
-          PE_FEC_PAG: date
+          PE_FEC_PAG: date,
+          PE_TIPO: employee.getDataValue('CB_NOMINA')
         },
         logging: () => console.log(chalk.green("Successful query to period"))
       });
@@ -56,23 +75,6 @@ const controller = {
           CB_CODIGO: parseInt(employeeNumber, 10)
         },
         logging: () => console.log(chalk.green("Successful query to payroll"))
-      });
-
-      const employee = await Employee.findOne({
-        attributes: [
-          'PRETTYNAME',
-          'CB_PATRON',
-          'CB_FEC_ANT',
-          'CB_FEC_ING',
-          'CB_SEGSOC',
-          'CB_RFC',
-          'CB_CURP',
-          'CB_INFCRED'
-        ],
-        where: {
-          CB_CODIGO: parseInt(employeeNumber, 10)
-        },
-        logging: () => console.log(chalk.green("Successful query to employee"))
       });
 
       const businessName = await BusinessName.findOne({
@@ -160,22 +162,13 @@ const controller = {
       console.log(chalk.green("Payroll detail initialized"))
 
       console.log(chalk.white("Initializing payroll pdf"))
-      console.log("ESTE ES EL RESOLVE: ",path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`));
-      // console.log("ESTE ES EL NORMAL: ",path.join(__dirname, "../../","assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`));
-      const pathPDF = `${path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`)}`
-      console.log("ESTA ES LA VARIABLE, ", pathPDF);
-      const pdf = await pdfGenerator(detailHTML, pathPDF);
+      const pdf = await pdfGenerator(detailHTML);
       console.log(chalk.green("Payroll pdf initialized"))
 
-      console.log(chalk.white("Removing payroll pdf"))
-      fs.unlink(path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), err => {
-        if (err) throw err;
-        console.log(path.resolve(process.cwd(),"assets/",`${config.companyCode}-${employeeNumber}-${date}.pdf`), ' was deleted');
-      });
-      console.log(chalk.green("Payroll pdf removed"))
-
       return res.send({
-        payslipbinfile: pdf
+        PAYSLIPBINFILE: pdf,
+        IF_RESULT: "S",
+        IF_MESSAGE: ""
       });
 
     } catch (error) {
@@ -183,7 +176,9 @@ const controller = {
       console.error(error);
 
       return res.send({
-        message: "Something goes wrong!"
+        PAYSLIPBINFILE: null,
+        IF_RESULT: "E",
+        IF_MESSAGE: "No information was found with the specified parameters."
       })
       
     }

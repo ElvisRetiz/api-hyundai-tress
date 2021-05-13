@@ -5,9 +5,9 @@ const { Sequelize } = require('sequelize');
 const { arrayToObject } = require('../helpers/configObjectHandler');
 
 let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/db.config')).toString().split(',');
-let { dbUser, dbPassword, dbServer, dbName } = arrayToObject(configArray);
+let { dbUser, dbPassword, dbServer, dbComparte } = arrayToObject(configArray);
 
-const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
+const sequelize = new Sequelize(dbComparte, dbUser, dbPassword, {
   host: dbServer,
   dialect: 'mssql'
 });

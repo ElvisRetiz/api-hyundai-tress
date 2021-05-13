@@ -5,7 +5,7 @@ const sequelize = require('../db/index');
 
 const { arrayToObject } = require('../helpers/configObjectHandler');
 
-let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const config = arrayToObject(configArray);
 
 class Employee extends Model {}
@@ -15,6 +15,10 @@ Employee.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true
+  },
+  CB_NOMINA: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   CB_ACTIVO: {
     type: DataTypes.CHAR,
@@ -49,6 +53,10 @@ Employee.init({
     allowNull: false
   },
   CB_FEC_ING: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  CB_FEC_NAC: {
     type: DataTypes.DATEONLY,
     allowNull: false
   },

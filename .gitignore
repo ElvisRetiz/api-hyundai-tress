@@ -1,7 +1,9 @@
 node_modules
 api-hyundai-tress.exe
+api-service.exe
 server.exe
 pm2
 api-hyundai-tress-linux
 api-hyundai-tress-macos
 api-hyundai-tress-win.exe
+.gitignore

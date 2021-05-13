@@ -23,7 +23,7 @@ const attendanceRoute = require('./routes/attendance.route');
 const payrollRoute = require('./routes/payroll.route');
 const payslipRoute = require('./routes/payslip.route');
 
-app.use("/api",homeRoute)
+app.use("/api",homeRoute);
 app.use("/api/employee", employeeRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/attendance", attendanceRoute);
