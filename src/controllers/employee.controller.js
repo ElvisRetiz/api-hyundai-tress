@@ -17,7 +17,7 @@ const controller = {
       const result = await sequelize.query(`
       select 
         PERNR=CAST(C.cb_codigo AS varchar),
-        GBDAT=FORMAT(C.cb_fec_nac,'d','en-gb'),
+        GBDAT=FORMAT(C.cb_fec_nac,'yyyy-MM-dd','en-gb'),
         NIMSS=C.cb_segsoc,
         NURFC=C.cb_rfc,
         NCURP=C.cb_curp,
@@ -26,8 +26,7 @@ const controller = {
         ZMORGTX05=N2.TB_ELEMENT,
         AREA=N3.TB_ELEMENT,
         SUBAERA=N4.TB_ELEMENT,
-        PTEXT=E1.TB_ELEMENT,
-        PHOTO64=(select IM_BLOB as '*' from IMAGEN where CB_CODIGO = C.CB_CODIGO and IM_TIPO = 'FOTO' for xml path(''))
+        PTEXT=E1.TB_ELEMENT
       from COLABORA C
       Left Join RPATRON RP on C.CB_PATRON=RP.TB_CODIGO
       Left Join RSOCIAL RS on RP.RS_CODIGO=RS.RS_CODIGO
