@@ -5,22 +5,22 @@ const sequelize = require('../db/index');
 
 const { arrayToObject } = require('../helpers/configObjectHandler');
 
-let configArray = fs.readFileSync(path.join(__dirname,'../../','config/data.config')).toString().split(',');
+let configArray = fs.readFileSync(path.resolve(process.cwd(),'config/data.config')).toString().split(',');
 const config = arrayToObject(configArray);
 
 class Subarea extends Model {}
 
 Subarea.init({
-  TB_CODIGO: {
+  PU_CODIGO: {
     type: DataTypes.CHAR,
     allowNull: false,
     primaryKey: true
   },
-  TB_ELEMENT: {
+  PU_DESCRIP: {
     type: DataTypes.CHAR,
     allowNull: false
   },
-  TB_INGLES: {
+  PU_INGLES: {
     type: DataTypes.CHAR,
     allowNull: false
   }

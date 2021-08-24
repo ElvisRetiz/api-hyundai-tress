@@ -30,11 +30,13 @@
     "assets": [
       "config/**/*",
       "app.key",
-      "src/assets/**/*",
       "assets/**/*"
     ],
     "scripts": [
       "src/**/*.js"
+    ],
+    "targets": [
+      "node12-win-x64"
     ]
   }
 }
